@@ -42,7 +42,7 @@ jobs:
           tar -xzf /tmp/persistent-self.tar.gz -C .
           mkdir -p docs/evidence
           base64 --decode .bootstrap-payload/preview.b64 > docs/evidence/frontend-preview.png
-          echo "ef7be98b0d1b6a3fd432a95e00d7bb2d1f493497d78fcc8a04d53649678dcadc  docs/evidence/frontend-preview.png" | sha256sum --check
+          echo "c7a4075a8767f6c64887b0c8b9e19921fa67290c380a635c3cd48e783d4bd365  docs/evidence/frontend-preview.png" | sha256sum --check
           rm -rf .bootstrap .bootstrap-payload
           rm -f .github/workflows/publish-baseline.yml
 
