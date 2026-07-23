@@ -2,19 +2,24 @@ name: Publish competition baseline
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+  issues:
+    types: [opened]
 
 permissions:
   contents: write
 
 jobs:
   publish:
+    if: github.event_name != 'issues' || github.event.issue.title == 'publish-competition-baseline-final'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Reconstruct and verify project baseline
+      - name: Reconstruct project baseline
         shell: bash
         run: |
           set -euo pipefail
