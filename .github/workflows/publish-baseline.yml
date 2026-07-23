@@ -6,6 +6,10 @@ on:
     - cron: "*/5 * * * *"
   issues:
     types: [opened]
+  push:
+    branches: [main]
+    paths:
+      - ".github/trigger-baseline"
 
 permissions:
   contents: write
@@ -40,6 +44,7 @@ jobs:
           base64 --decode .bootstrap-payload/preview.b64 > docs/evidence/frontend-preview.png
           file docs/evidence/frontend-preview.png
           rm -rf .bootstrap .bootstrap-payload
+          rm -f .github/trigger-baseline
           rm -f .github/workflows/publish-baseline.yml
 
       - name: Commit baseline and create competition tag
