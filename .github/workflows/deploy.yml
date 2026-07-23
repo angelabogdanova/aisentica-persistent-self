@@ -1,0 +1,94 @@
+name: Deploy to AWS
+
+on:
+  workflow_dispatch:
+    inputs:
+      model_mode:
+        description: Model mode for Lambda
+        required: true
+        default: hybrid
+        type: choice
+        options:
+          - bedrock
+          - hybrid
+          - deterministic
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: persistent-self-production
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: us-east-1
+  STACK_NAME: aisentica-persistent-self
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm install --no-audit --no-fund
+      - run: npm run check
+
+      - uses: aws-actions/setup-sam@v2
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Build SAM application
+        run: sam build
+
+      - name: Deploy backend and static hosting
+        env:
+          DATABASE_URL: ${{ secrets.COCKROACH_DATABASE_URL }}
+          MODEL_MODE: ${{ inputs.model_mode }}
+        run: |
+          sam deploy \
+            --stack-name "$STACK_NAME" \
+            --region "$AWS_REGION" \
+            --resolve-s3 \
+            --capabilities CAPABILITY_IAM \
+            --no-confirm-changeset \
+            --no-fail-on-empty-changeset \
+            --parameter-overrides \
+              "DatabaseUrl=$DATABASE_URL" \
+              "AllowedOrigin=*" \
+              "ModelMode=$MODEL_MODE"
+
+      - name: Read stack outputs
+        run: |
+          aws cloudformation describe-stacks \
+            --stack-name "$STACK_NAME" \
+            --query 'Stacks[0].Outputs' \
+            --output json > stack-outputs.json
+          cat stack-outputs.json
+
+      - name: Configure frontend
+        run: |
+          API_URL=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs[?OutputKey=='ApiUrl'].OutputValue" --output text)
+          cat > frontend/config.js <<CONFIG
+          window.PERSISTENT_SELF_CONFIG = {
+            API_BASE_URL: "$API_URL"
+          };
+          CONFIG
+
+      - name: Publish frontend to S3
+        run: |
+          WEBSITE_BUCKET=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs[?OutputKey=='WebsiteBucketName'].OutputValue" --output text)
+          aws s3 sync frontend/ "s3://$WEBSITE_BUCKET" --delete --exclude 'config.example.js'
+
+      - name: Invalidate CloudFront
+        run: |
+          DISTRIBUTION_ID=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs[?OutputKey=='DistributionId'].OutputValue" --output text)
+          aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION_ID" --paths '/*'
