@@ -1,0 +1,40 @@
+name: Publish competition baseline
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/publish-baseline.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Reconstruct project baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .bootstrap-payload/part-*.b64 | base64 --decode > /tmp/persistent-self.tar.gz
+          tar -xzf /tmp/persistent-self.tar.gz -C .
+          mkdir -p docs/evidence
+          base64 --decode .bootstrap-payload/preview.b64 > docs/evidence/frontend-preview.png
+          rm -rf .bootstrap .bootstrap-payload
+
+      - name: Commit baseline and create competition tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "angelabogdanova"
+          git config user.email "site.lighting.luxe@gmail.com"
+          git add -A
+          git commit -m "Establish Persistent Self competition baseline"
+          git tag -a competition-start -m "CockroachDB × AWS Hackathon competition baseline"
+          git push origin HEAD:main
+          git push origin refs/tags/competition-start
