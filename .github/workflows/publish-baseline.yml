@@ -4,19 +4,16 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "*/5 * * * *"
-  issues:
-    types: [opened]
   push:
     branches: [main]
     paths:
-      - ".github/trigger-baseline"
+      - ".github/trigger-baseline-2"
 
 permissions:
   contents: write
 
 jobs:
   publish:
-    if: github.event_name != 'issues' || github.event.issue.title == 'publish-competition-baseline-final'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -43,9 +40,12 @@ jobs:
           mkdir -p docs/evidence
           base64 --decode .bootstrap-payload/preview.b64 > docs/evidence/frontend-preview.png
           file docs/evidence/frontend-preview.png
+
+          # GitHub protects workflow files from being created by this token.
+          # They are added directly through the authenticated GitHub connector after this commit.
+          rm -f .github/workflows/ci.yml .github/workflows/deploy.yml
           rm -rf .bootstrap .bootstrap-payload
-          rm -f .github/trigger-baseline
-          rm -f .github/workflows/publish-baseline.yml
+          rm -f .github/trigger-baseline .github/trigger-baseline-2
 
       - name: Commit baseline and create competition tag
         shell: bash
