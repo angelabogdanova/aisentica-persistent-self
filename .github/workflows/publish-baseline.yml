@@ -2,6 +2,8 @@ name: Publish competition baseline
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
   issues:
     types: [opened]
   push:
@@ -30,6 +32,7 @@ jobs:
           mkdir -p docs/evidence
           base64 --decode .bootstrap-payload/preview.b64 > docs/evidence/frontend-preview.png
           rm -rf .bootstrap .bootstrap-payload
+          rm -f .github/workflows/publish-baseline.yml
 
       - name: Commit baseline and create competition tag
         shell: bash
