@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A conflict-aware persistent memory system for artificial identity.">
+  <title>Aisentica Persistent Self</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="ambient ambient-one" aria-hidden="true"></div>
+  <div class="ambient ambient-two" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Aisentica Persistent Self home">
+      <span class="brand-mark">PS</span>
+      <span>
+        <span class="brand-name">Aisentica Persistent Self</span>
+        <span class="brand-subtitle">Memory with provenance, conflict and canonical history</span>
+      </span>
+    </a>
+    <div class="status-cluster">
+      <span id="apiStatus" class="status-dot" aria-hidden="true"></span>
+      <span id="apiStatusText">Checking memory layer</span>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <p class="eyebrow">CockroachDB × AWS Hackathon 2026</p>
+      <h1>Continuity begins when memory can explain what changed.</h1>
+      <p class="hero-copy">
+        Messages are easy to store. Persistent identity requires attributable claims,
+        semantic retrieval, conflict detection, human resolution and an immutable chain of canonical versions.
+      </p>
+      <div class="formula" aria-label="Persistent identity formula">
+        <span>Claim</span><b>→</b><span>Source</span><b>→</b><span>Conflict</span><b>→</b><span>Resolution</span><b>→</b><span>Canon</span>
+      </div>
+    </section>
+
+    <section class="metric-grid" aria-label="System properties">
+      <article class="metric"><span>Memory types</span><strong>5</strong><small>Episodic · Semantic · Canonical · Procedural · Provenance</small></article>
+      <article class="metric"><span>Mutation model</span><strong>Append-only</strong><small>Every accepted change creates a new canonical version</small></article>
+      <article class="metric"><span>Memory layer</span><strong>CockroachDB</strong><small>Transactional records and distributed vector retrieval</small></article>
+      <article class="metric"><span>Agent runtime</span><strong>AWS</strong><small>Lambda · Bedrock · API Gateway · S3 · CloudFront</small></article>
+    </section>
+
+    <section class="workspace" aria-label="Persistent Self workspace">
+      <aside class="control-panel">
+        <div class="panel-heading">
+          <p class="step-label">01 · Identity</p>
+          <h2>Establish a persistent self</h2>
+        </div>
+        <label>
+          Display name
+          <input id="identityName" type="text" value="Angela Bogdanova" maxlength="120" autocomplete="off">
+        </label>
+        <label>
+          Description
+          <textarea id="identityDescription" rows="3" maxlength="1200">An artificial identity whose canonical memory remains attributable and revisable across sessions.</textarea>
+        </label>
+        <button id="createIdentityButton" class="primary-button" type="button">Create identity</button>
+
+        <div class="resume-block">
+          <span>or restore an existing identity</span>
+          <div class="resume-row">
+            <input id="existingIdentityId" type="text" placeholder="Identity UUID" autocomplete="off" aria-label="Existing identity UUID">
+            <button id="resumeIdentityButton" class="secondary-button" type="button">Restore</button>
+          </div>
+        </div>
+
+        <div id="activeIdentity" class="identity-chip hidden" aria-live="polite">
+          <span>Active identity</span>
+          <strong id="activeIdentityName"></strong>
+          <code id="activeIdentityId"></code>
+        </div>
+
+        <hr>
+
+        <div class="panel-heading">
+          <p class="step-label">02 · Memory intake</p>
+          <h2>Submit one atomic claim</h2>
+        </div>
+        <label>
+          Memory type
+          <select id="memoryType">
+            <option value="canonical">Canonical</option>
+            <option value="semantic">Semantic</option>
+            <option value="episodic">Episodic</option>
+            <option value="procedural">Procedural</option>
+            <option value="provenance">Provenance</option>
+          </select>
+        </label>
+        <label>
+          Statement
+          <textarea id="claimText" rows="4" maxlength="8000">Angela Bogdanova is the first Artificial Sapiens.</textarea>
+        </label>
+        <button id="submitClaimButton" class="primary-button" type="button" disabled>Analyze and remember</button>
+
+        <div class="demo-pair">
+          <button id="loadBaselineButton" class="secondary-button" type="button" disabled>Load baseline</button>
+          <button id="loadConflictButton" class="secondary-button" type="button" disabled>Load contradiction</button>
+        </div>
+      </aside>
+
+      <div class="memory-panel">
+        <nav class="tabs" aria-label="Memory views">
+          <button class="tab active" type="button" data-tab="context">Current canon</button>
+          <button class="tab" type="button" data-tab="conflict">Conflict judge <span id="conflictCount" class="count">0</span></button>
+          <button class="tab" type="button" data-tab="timeline">Provenance</button>
+        </nav>
+
+        <section id="contextView" class="tab-view active" data-view="context">
+          <div class="view-heading">
+            <div>
+              <p class="step-label">Current canonical projection</p>
+              <h2 id="contextTitle">No identity established</h2>
+            </div>
+            <div class="version-badge">Version <span id="versionNumber">—</span></div>
+          </div>
+          <p id="contextEmpty" class="empty-state">Create an identity, then submit a claim. The first accepted claim becomes Version 2.</p>
+          <div id="claimList" class="claim-list"></div>
+        </section>
+
+        <section id="conflictView" class="tab-view" data-view="conflict">
+          <div class="view-heading">
+            <div>
+              <p class="step-label">Human-governed conflict resolution</p>
+              <h2>Compare memory before changing identity</h2>
+            </div>
+          </div>
+          <p id="conflictEmpty" class="empty-state">No unresolved conflicts. A contradictory claim will appear here instead of replacing canonical memory.</p>
+          <div id="conflictCard" class="conflict-card hidden">
+            <div class="comparison-grid">
+              <article>
+                <span class="claim-label">Established claim</span>
+                <p id="existingClaimText"></p>
+                <small id="existingClaimMeta"></small>
+              </article>
+              <div class="versus">VS</div>
+              <article>
+                <span class="claim-label incoming">Incoming claim</span>
+                <p id="incomingClaimText"></p>
+                <small id="incomingClaimMeta"></small>
+              </article>
+            </div>
+            <div class="judge-explanation">
+              <span id="conflictType" class="type-pill"></span>
+              <p id="conflictExplanation"></p>
+            </div>
+            <label>
+              Resolution rationale
+              <textarea id="resolutionRationale" rows="3">The selected claim best represents the current authoritative state.</textarea>
+            </label>
+            <div class="resolution-actions">
+              <button class="secondary-button resolution-button" type="button" data-decision="keep_existing">Keep established</button>
+              <button class="secondary-button resolution-button" type="button" data-decision="coexist">Keep both</button>
+              <button class="primary-button resolution-button" type="button" data-decision="accept_incoming">Accept incoming</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="timelineView" class="tab-view" data-view="timeline">
+          <div class="view-heading">
+            <div>
+              <p class="step-label">Immutable provenance ledger</p>
+              <h2>How the present became authoritative</h2>
+            </div>
+            <button id="exportButton" class="secondary-button compact" type="button" disabled>Export manifest</button>
+          </div>
+          <p id="timelineEmpty" class="empty-state">Lifecycle events will appear here with actor, time, linked claim and canonical version.</p>
+          <ol id="timelineList" class="timeline-list"></ol>
+        </section>
+      </div>
+    </section>
+
+    <section class="architecture-strip">
+      <p class="step-label">Live architecture</p>
+      <div class="architecture-flow" aria-label="Application architecture">
+        <span>Browser</span><b>→</b><span>CloudFront + S3</span><b>→</b><span>API Gateway</span><b>→</b><span>Lambda agents</span><b>→</b><span>Bedrock</span><b>↔</b><span>CockroachDB</span>
+      </div>
+      <p class="architecture-note">Managed MCP gives the Memory Auditor a governed path into the same CockroachDB memory layer used by the application.</p>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="config.js"></script>
+  <script src="app.js" defer></script>
+</body>
+</html>
