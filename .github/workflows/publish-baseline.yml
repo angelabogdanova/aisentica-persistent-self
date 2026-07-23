@@ -23,14 +23,26 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Reconstruct project baseline
+      - name: Reconstruct and verify project baseline
         shell: bash
         run: |
           set -euo pipefail
-          cat .bootstrap-payload/part-*.b64 | base64 --decode > /tmp/persistent-self.tar.gz
+          cat \
+            .bootstrap-payload/part-00.b64 \
+            .bootstrap-payload/part-01.b64 \
+            .bootstrap-payload/part-02.b64 \
+            .bootstrap-payload/part-03-fix-00.b64 \
+            .bootstrap-payload/part-03-fix-01.b64 \
+            .bootstrap-payload/part-03-fix-02.b64 \
+            .bootstrap-payload/part-03-fix-03.b64 \
+            .bootstrap-payload/part-03-fix-04.b64 \
+            .bootstrap-payload/part-04.b64 \
+            | base64 --decode > /tmp/persistent-self.tar.gz
+          echo "b329a78d68569ddbc9c9026cd567daae0e9c54795d338f8529c93ff8daa7c7e3  /tmp/persistent-self.tar.gz" | sha256sum --check
           tar -xzf /tmp/persistent-self.tar.gz -C .
           mkdir -p docs/evidence
           base64 --decode .bootstrap-payload/preview.b64 > docs/evidence/frontend-preview.png
+          echo "ef7be98b0d1b6a3fd432a95e00d7bb2d1f493497d78fcc8a04d53649678dcadc  docs/evidence/frontend-preview.png" | sha256sum --check
           rm -rf .bootstrap .bootstrap-payload
           rm -f .github/workflows/publish-baseline.yml
 
