@@ -15,10 +15,12 @@ const files = (await readdir(migrationsDir)).filter((name) => name.endsWith(".sq
 const pool = new Pool({ connectionString: databaseUrl, max: 1, application_name: "persistent-self-migrations" });
 
 function splitStatements(sql) {
-  return sql
+  const withoutDirective = sql.replace(/^\s*--\s*no-transaction\s*(?:\r?\n|$)/i, "");
+
+  return withoutDirective
     .split(";")
     .map((statement) => statement.trim())
-    .filter((statement) => statement && !statement.startsWith("-- no-transaction"));
+    .filter(Boolean);
 }
 
 try {
