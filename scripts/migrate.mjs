@@ -14,15 +14,28 @@ const migrationsDir = resolve(root, "migrations");
 const files = (await readdir(migrationsDir)).filter((name) => name.endsWith(".sql")).sort();
 const pool = new Pool({ connectionString: databaseUrl, max: 1, application_name: "persistent-self-migrations" });
 
+function splitStatements(sql) {
+  return sql
+    .split(";")
+    .map((statement) => statement.trim())
+    .filter((statement) => statement && !statement.startsWith("-- no-transaction"));
+}
+
 try {
   for (const file of files) {
     const sql = await readFile(resolve(migrationsDir, file), "utf8");
     const noTransaction = sql.trimStart().startsWith("-- no-transaction");
     const client = await pool.connect();
     try {
-      if (!noTransaction) await client.query("BEGIN");
-      await client.query(sql);
-      if (!noTransaction) await client.query("COMMIT");
+      if (noTransaction) {
+        for (const statement of splitStatements(sql)) {
+          await client.query(statement);
+        }
+      } else {
+        await client.query("BEGIN");
+        await client.query(sql);
+        await client.query("COMMIT");
+      }
       console.log(`Applied ${file}`);
     } catch (error) {
       if (!noTransaction) await client.query("ROLLBACK").catch(() => undefined);
