@@ -1,3 +1,4 @@
+-- no-transaction
 CREATE TABLE IF NOT EXISTS identities (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   slug STRING NOT NULL UNIQUE,
