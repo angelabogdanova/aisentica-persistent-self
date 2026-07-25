@@ -83,9 +83,9 @@ Resources:
           - src/handler.ts
         Minify: true
         Target: es2022
-        Format: esm
+        Format: cjs
         OutExtension:
-          - .js=.mjs
+          - .js=.cjs
         Sourcemap: true
 
   ExportBucket:
