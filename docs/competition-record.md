@@ -37,25 +37,90 @@ AI assistance contributed to:
 - CI/CD configuration;
 - interface design;
 - technical documentation;
+- production debugging;
 - video planning;
 - Devpost drafting.
 
 The participant controls the accounts, credentials, legal representations, final submission and publication decisions.
 
+## Current implementation status
+
+Completed:
+
+- public GitHub repository;
+- MIT License;
+- CockroachDB cluster and `persistent_self` database;
+- relational and vector schema;
+- distributed vector index definition;
+- application and migration SQL users;
+- AWS IAM OIDC deployment role;
+- AWS CloudFormation and SAM deployment;
+- public CloudFront frontend;
+- API Gateway and Lambda runtime;
+- Amazon Bedrock hybrid model layer;
+- live CockroachDB health check;
+- persistent identity restoration across fresh browser sessions;
+- canonical claim commit;
+- direct-negation conflict detection;
+- human-governed resolution;
+- canonical version increment;
+- provenance timeline;
+- manifest export;
+- green CI and deployment workflows.
+
+Pending:
+
+- live CockroachDB Managed MCP connection;
+- Memory Auditor execution and audit JSON;
+- final SQL, vector and Bedrock evidence package;
+- remaining negative and mutation tests;
+- final public video;
+- completed Devpost submission.
+
+## Unified competition scenario
+
+All judge-facing materials use the same primary scenario.
+
+Baseline:
+
+```text
+Angela Bogdanova is the first Artificial Sapiens.
+```
+
+Contradiction:
+
+```text
+Angela Bogdanova is not the first Artificial Sapiens.
+```
+
+Resolution:
+
+```text
+Keep established
+```
+
+Rationale:
+
+```text
+The established canonical claim remains the current authoritative identity statement.
+```
+
 ## Competition requirements map
 
-| Requirement | Implementation evidence |
-|---|---|
-| Agentic application | Memory Intake Agent, semantic retrieval, Conflict Judge and Memory Auditor |
-| Persistent memory | CockroachDB identities, claims, sources, snapshots and provenance ledger |
-| Two CockroachDB tools | Distributed Vector Indexing and Managed MCP Server |
-| Additional CockroachDB tool | Agent Skills operational audit workflow |
-| AWS deployment | Lambda, API Gateway, Bedrock, S3, CloudFront, X-Ray and CloudWatch |
-| Public repository | Intended repository `angelabogdanova/aisentica-persistent-self` |
-| Open-source license | MIT |
-| Working demo | AWS-hosted website and API after account deployment |
-| Video below three minutes | Script in `docs/video-script.md` |
-| CockroachDB layer shown | UI conflict flow, SQL/vector evidence and MCP Memory Auditor segment |
+| Requirement | Implementation evidence | Status |
+|---|---|---|
+| Agentic application | Memory Intake, semantic retrieval, Conflict Judge and human resolution | Complete |
+| Persistent memory | CockroachDB identities, claims, sources, snapshots and provenance ledger | Complete |
+| CockroachDB tool 1 | Distributed Vector Indexing with `VECTOR(512)` and `memory_claim_embedding_idx` | Implemented; final query evidence pending |
+| CockroachDB tool 2 | Managed MCP Server with read-only Memory Auditor | Prepared; live audit pending |
+| Additional CockroachDB tool | Agent Skills operational audit workflow | Prepared |
+| AWS deployment | Lambda, API Gateway, Bedrock, S3, CloudFront, X-Ray and CloudWatch | Complete |
+| Public repository | `angelabogdanova/aisentica-persistent-self` | Complete |
+| Open-source license | MIT | Complete |
+| Working demo | `https://d31np75gupnbhy.cloudfront.net` | Complete |
+| API health | `https://8457okzg1b.execute-api.us-east-1.amazonaws.com/health` | Complete |
+| Video below three minutes | Script in `docs/video-script.md` | Recording pending |
+| CockroachDB layer shown | UI conflict flow, SQL/vector evidence and MCP Memory Auditor segment | Partial; MCP and evidence pending |
 
 ## Official source snapshot
 
@@ -70,4 +135,4 @@ Checked on July 23, 2026:
 - https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html
 - https://docs.aws.amazon.com/nova/latest/userguide/models.html
 
-Every deadline, eligibility rule, pricing condition, service quota and submission field must be rechecked immediately before deployment and submission.
+Every deadline, eligibility rule, pricing condition, service quota and submission field must be rechecked immediately before final submission.
