@@ -61,7 +61,7 @@ jobs:
           echo "RUNTIME_PERMISSIONS_BOUNDARY_ARN=$RUNTIME_PERMISSIONS_BOUNDARY_ARN" >> "$GITHUB_ENV"
 
       - name: Build SAM application
-        run: sam build
+        run: PATH="$GITHUB_WORKSPACE/node_modules/.bin:$PATH" sam build
 
       - name: Deploy backend and static hosting
         env:
