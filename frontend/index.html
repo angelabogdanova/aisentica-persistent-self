@@ -40,7 +40,7 @@
 
     <section class="metric-grid" aria-label="System properties">
       <article class="metric"><span>Memory types</span><strong>5</strong><small>Episodic · Semantic · Canonical · Procedural · Provenance</small></article>
-      <article class="metric"><span>Mutation model</span><strong>Append-only</strong><small>Every accepted change creates a new canonical version</small></article>
+      <article class="metric"><span>Mutation model</span><strong>Append-only</strong><small>Each committed claim or governed conflict resolution creates a canonical version</small></article>
       <article class="metric"><span>Memory layer</span><strong>CockroachDB</strong><small>Transactional records and distributed vector retrieval</small></article>
       <article class="metric"><span>Agent runtime</span><strong>AWS</strong><small>Lambda · Bedrock · API Gateway · S3 · CloudFront</small></article>
     </section>
@@ -150,7 +150,7 @@
             </div>
             <label>
               Resolution rationale
-              <textarea id="resolutionRationale" rows="3">The selected claim best represents the current authoritative state.</textarea>
+              <textarea id="resolutionRationale" rows="3">The established canonical claim remains the current authoritative identity statement.</textarea>
             </label>
             <div class="resolution-actions">
               <button class="secondary-button resolution-button" type="button" data-decision="keep_existing">Keep established</button>
@@ -179,12 +179,13 @@
       <div class="architecture-flow" aria-label="Application architecture">
         <span>Browser</span><b>→</b><span>CloudFront + S3</span><b>→</b><span>API Gateway</span><b>→</b><span>Lambda agents</span><b>→</b><span>Bedrock</span><b>↔</b><span>CockroachDB</span>
       </div>
-      <p class="architecture-note">Managed MCP gives the Memory Auditor a governed path into the same CockroachDB memory layer used by the application.</p>
+      <p class="architecture-note">Managed MCP Memory Auditor integration is prepared and remains pending final live audit.</p>
     </section>
   </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js"></script>
   <script src="app.js" defer></script>
+  <script src="demo-scenario.js" defer></script>
 </body>
 </html>
