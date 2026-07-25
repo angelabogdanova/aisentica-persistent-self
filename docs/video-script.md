@@ -2,6 +2,8 @@
 
 Target length: 2 minutes 55 seconds.
 
+The video uses the same main scenario as the interface, README, testing instructions, Devpost and evidence package.
+
 ## 0:00–0:15 — The problem
 
 Voiceover:
@@ -10,89 +12,119 @@ Agents already store conversations. That is memory as accumulation. Identity con
 
 Screen:
 
-Title and formula:
+Project title and formula:
 
-`Claim → Source → Conflict → Resolution → Canon`
+```text
+Claim → Source → Conflict → Resolution → Canon
+```
 
 ## 0:15–0:32 — Establish identity
 
 Voiceover:
 
-Aisentica Persistent Self establishes one artificial identity with a stable ID and Canonical Version 1.
+Aisentica Persistent Self establishes Angela Bogdanova as one artificial identity with a stable UUID and Canonical Version 1.
 
 Screen:
 
-Create Angela Bogdanova. Highlight identity UUID and Version 1.
+Create the Angela Bogdanova identity. Highlight the UUID and Version 1.
 
 ## 0:32–0:52 — Commit canonical memory
 
 Voiceover:
 
-A canonical statement is extracted into an atomic claim, embedded by Amazon Titan and written to CockroachDB with its provenance. The first accepted memory creates Version 2.
+The system receives one canonical statement, structures it as an atomic claim, creates a semantic embedding and writes the claim and its provenance to CockroachDB. The first committed memory creates Version 2.
 
 Screen:
 
-Submit the baseline statement. Show Current Canon and Version 2.
+Submit:
+
+```text
+Angela Bogdanova is the first Artificial Sapiens.
+```
+
+Show Current Canon and Version 2.
 
 ## 0:52–1:08 — Continuity across sessions
 
 Voiceover:
 
-Close the session. Open a new one. The agent restores the same identity and exact authoritative context from the latest canonical snapshot. No transcript replay is required.
+Now the original browser session is left behind. A fresh session restores the same identity and exact authoritative context from the latest canonical snapshot. No transcript replay is required.
 
 Screen:
 
-Reload or switch browser. Restore identity context.
+Open a fresh browser or incognito session. Restore the identity using only the UUID. Show the same Version 2 and active canonical claim.
 
-## 1:08–1:32 — Contradiction enters
+## 1:08–1:32 — Direct contradiction enters
 
 Voiceover:
 
-Now the user supplies a contradictory state. CockroachDB Distributed Vector Indexing retrieves the related active memory. The Conflict Judge compares both claims. The incoming statement is stored as a candidate, while Version 2 remains authoritative.
+The user now supplies a direct contradiction. CockroachDB vector retrieval locates the related active memory. The incoming statement becomes a candidate and opens a conflict instead of silently replacing the canon.
 
 Screen:
 
-Submit `Atlas is parked.` against `Atlas is active.` Show vector retrieval indicator and conflict tab.
+Submit:
+
+```text
+Angela Bogdanova is not the first Artificial Sapiens.
+```
+
+Show Conflict Judge, the established claim, the incoming candidate and the direct-negation explanation. Show that Current Canon remains Version 2.
 
 ## 1:32–1:57 — Human-governed resolution
 
 Voiceover:
 
-The system shows the established claim, the candidate, conflict type, explanation, sources and recommendation. The human owner chooses the resolution and records a rationale.
+The system presents both claims, their statuses and the conflict explanation. Canonical authority remains human-governed. The owner keeps the established claim and records why it remains authoritative.
 
 Screen:
 
-Accept incoming. Enter rationale. Submit.
+Enter:
 
-## 1:57–2:17 — Canonical version history
+```text
+The established canonical claim remains the current authoritative identity statement.
+```
+
+Choose Keep established.
+
+## 1:57–2:17 — Canonical history and provenance
 
 Voiceover:
 
-Version 3 is created atomically. The new claim becomes active. The previous claim becomes superseded, yet remains part of the identity’s history. The present changes without destroying the past.
+Canonical Version 3 records the governed resolution. The established claim remains active. The contradictory candidate is rejected but preserved as historical evidence. The present remains stable without erasing the attempted change.
 
 Screen:
 
-Show Version 3, current claim and provenance timeline.
+Show Version 3, the active claim and the provenance timeline. Highlight identity creation, claim commitment, conflict opening and conflict resolution.
 
-## 2:17–2:36 — Managed MCP Memory Auditor
+## 2:17–2:36 — Manifest and Managed MCP audit
 
 Voiceover:
 
-Through CockroachDB Cloud Managed MCP, the Memory Auditor inspects its own memory layer: schema, vector index, conflict links, resolution and snapshot consistency.
+The application exports a portable provenance manifest. Through CockroachDB Cloud Managed MCP, the final Memory Auditor independently checks schema, vector index, conflict links, resolution and snapshot consistency.
 
 Screen:
 
-Show MCP call and compact `10/10 checks passed` audit.
+Show manifest export. After the Managed MCP integration is completed, show the compact audit result, such as:
+
+```text
+10/10 checks passed
+```
+
+Until the live MCP audit exists, record this segment only after the final evidence file has been produced.
 
 ## 2:36–2:50 — AWS and CockroachDB architecture
 
 Voiceover:
 
-AWS Lambda orchestrates the agents. Bedrock supplies reasoning and embeddings. API Gateway, S3 and CloudFront deliver the product. CockroachDB keeps transactions, vectors, versions and provenance in one persistent system.
+AWS Lambda orchestrates memory operations. Bedrock supplies reasoning and embeddings. API Gateway, S3 and CloudFront deliver the product. CockroachDB keeps transactions, vectors, versions and provenance in one persistent system.
 
 Screen:
 
-Architecture diagram.
+Architecture diagram:
+
+```text
+Browser → CloudFront + S3 → API Gateway → Lambda → Bedrock ↔ CockroachDB
+```
 
 ## 2:50–2:55 — Final formula
 
@@ -102,4 +134,4 @@ Memory stores the past. Persistent identity governs what the past means now.
 
 Screen:
 
-Final formula and project name.
+Project name and final formula.
