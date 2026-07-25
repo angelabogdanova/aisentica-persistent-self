@@ -60,7 +60,6 @@ Resources:
     Properties:
       CodeUri: backend
       Handler: src/handler.handler
-      ReservedConcurrentExecutions: 5
       PermissionsBoundary: !Ref RuntimePermissionsBoundaryArn
       Policies:
         - S3WritePolicy:
