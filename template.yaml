@@ -19,6 +19,9 @@ Parameters:
   EmbeddingModelId:
     Type: String
     Default: amazon.titan-embed-text-v2:0
+  RuntimePermissionsBoundaryArn:
+    Type: String
+    Description: Permissions boundary ARN created by the GitHub OIDC bootstrap stack.
 
 Globals:
   Function:
@@ -58,6 +61,7 @@ Resources:
       CodeUri: backend
       Handler: src/handler.handler
       ReservedConcurrentExecutions: 5
+      PermissionsBoundary: !Ref RuntimePermissionsBoundaryArn
       Policies:
         - AWSXRayDaemonWriteAccess
         - S3WritePolicy:
