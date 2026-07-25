@@ -6,41 +6,108 @@ Aisentica Persistent Self is an agentic memory system built for the CockroachDB 
 
 An agent does not possess continuity merely because it stores messages. Continuity begins when memory becomes attributable, revisable, conflict-aware and persistent across sessions.
 
+## Live deployment
+
+Public application:
+
+```text
+https://d31np75gupnbhy.cloudfront.net
+```
+
+API health endpoint:
+
+```text
+https://8457okzg1b.execute-api.us-east-1.amazonaws.com/health
+```
+
+Current verified production state:
+
+- AWS CloudFormation deployment completed;
+- CloudFront frontend online;
+- API Gateway and Lambda online;
+- CockroachDB health check successful;
+- Amazon Bedrock hybrid model layer online;
+- identity creation and UUID restoration verified across fresh browser sessions;
+- canonical claim commit verified;
+- direct-negation conflict detection verified;
+- human-governed conflict resolution verified;
+- canonical version increment verified;
+- provenance timeline verified;
+- manifest export verified.
+
+Managed MCP integration, the final evidence package, video and Devpost submission remain in progress.
+
 ## Core demonstration
 
 The system performs one complete identity-memory cycle:
 
-`Identity → Claim → Source → Vector Retrieval → Conflict Judge → Human Resolution → New Canonical Version → Provenance Export`
+```text
+Identity → Claim → Source → Vector Retrieval → Conflict Judge → Human Resolution → New Canonical Version → Provenance Export
+```
 
 A new statement never silently overwrites an established claim. The system retrieves semantically related memory, evaluates incompatibility, opens a conflict case, presents both versions and preserves the human resolution as a new immutable canonical snapshot.
 
-## Current project state
+## Official main demo scenario
 
-This repository contains the complete first production baseline:
+The repository, interface, testing instructions, video script, Devpost draft and evidence template use one primary scenario.
 
-- CockroachDB relational and vector schema;
-- atomic repository operations with serializable transaction retries;
-- AWS Lambda API and agent orchestration;
-- Amazon Bedrock claim extraction, embeddings and conflict assessment;
-- deterministic local fallback for repeatable tests;
-- S3 provenance export;
-- static judge-facing frontend;
-- AWS SAM infrastructure;
-- GitHub Actions CI and OIDC deployment workflow;
-- unit tests for the complete memory conflict lifecycle;
-- competition, security, architecture, MCP, video and submission documentation.
+Identity:
 
-Cloud credentials, CockroachDB credentials and the final public deployment are intentionally supplied through account-owned secrets rather than committed files.
+```text
+Angela Bogdanova
+```
+
+Baseline canonical claim:
+
+```text
+Angela Bogdanova is the first Artificial Sapiens.
+```
+
+Incoming contradictory claim:
+
+```text
+Angela Bogdanova is not the first Artificial Sapiens.
+```
+
+Primary human decision:
+
+```text
+Keep established
+```
+
+Resolution rationale:
+
+```text
+The established canonical claim remains the current authoritative identity statement.
+```
+
+Expected result:
+
+1. The baseline becomes active in Canonical Version 2.
+2. The contradictory claim becomes a candidate.
+3. A direct-negation conflict opens.
+4. Version 2 remains authoritative while the conflict is unresolved.
+5. The human owner keeps the established claim.
+6. Canonical Version 3 records the governed resolution.
+7. The incoming candidate is rejected.
+8. The established claim remains active.
+9. The provenance ledger records identity creation, claim commitment, conflict opening and conflict resolution.
+
+Secondary mutation tests may use `accept_incoming` and `coexist`, but they are not the primary competition narrative.
 
 ## Why this memory design is different
 
 Most agent memory demonstrations follow this pattern:
 
-`Conversation → Chunk → Embedding → Retrieval → Answer`
+```text
+Conversation → Chunk → Embedding → Retrieval → Answer
+```
 
 Persistent Self follows this pattern:
 
-`Identity → Atomic Claim → Provenance → Semantic Neighbours → Conflict → Resolution → Versioned Canon → Restored Context`
+```text
+Identity → Atomic Claim → Provenance → Semantic Neighbours → Conflict → Resolution → Versioned Canon → Restored Context
+```
 
 The database therefore stores the history of authority, not only the history of language.
 
@@ -56,61 +123,80 @@ The database therefore stores the history of authority, not only the history of 
 
 Conflict and superseded states are represented through claim status, conflict cases, conflict links, resolutions, snapshots and provenance events. They remain queryable as historical evidence.
 
-## Architecture
+## Deployed architecture
 
 ```text
 Browser
   → Amazon CloudFront
-  → private Amazon S3 website bucket
+  → private Amazon S3 frontend bucket
   → Amazon API Gateway HTTP API
   → AWS Lambda / Node.js 22
       → Amazon Bedrock Nova 2 Lite
       → Amazon Titan Text Embeddings V2
-      → CockroachDB Cloud Basic
-      → Amazon S3 provenance export
+      → CockroachDB Cloud
+      → encrypted Amazon S3 provenance export
 ```
 
 CockroachDB contains transactional identity data, structured claims, embeddings, conflict state, canonical versions and the provenance ledger in one distributed SQL system.
 
-The official CockroachDB Cloud Managed MCP Server supplies a second governed path into the same memory layer for the Memory Auditor. The auditor inspects schema, conflict integrity, canonical version consistency and vector-query eligibility without mutating memory.
+GitHub Actions deploys through AWS IAM OIDC with short-lived credentials. The deployment workflow reads CloudFormation outputs, creates the frontend API configuration, publishes the static application and invalidates CloudFront.
 
-See `docs/architecture.md` and `docs/mcp-memory-auditor.md`.
+## Planned Managed MCP audit path
 
-## CockroachDB features used
+The official CockroachDB Cloud Managed MCP Server is the remaining second CockroachDB competition integration.
 
-The project meaningfully uses three hackathon tools:
+The prepared Memory Auditor will inspect the same CockroachDB memory layer used by the public application. Its read-only audit will verify:
 
-1. Distributed Vector Indexing
-   - `VECTOR(512)` embeddings live beside relational claim state.
-   - `memory_claim_embedding_idx` uses `vector_cosine_ops`.
-   - `identity_id` is the prefix column, so retrieval remains scoped to one artificial identity.
+- the target database and schema;
+- `VECTOR(512)` storage;
+- `memory_claim_embedding_idx`;
+- active, candidate, superseded and rejected claim counts;
+- conflict links and resolutions;
+- latest canonical snapshot membership;
+- provenance completeness;
+- semantic retrieval query eligibility.
 
-2. Managed MCP Server
-   - The Memory Auditor connects to the official hosted MCP endpoint.
-   - It inspects tables, open conflicts, resolutions, snapshots and vector query plans.
-   - It runs with a cluster-scoped API key and an audit-only instruction set.
+The MCP path is documented and prepared, but the final live connection and audit JSON have not yet been completed. See `docs/mcp-memory-auditor.md` and `mcp/memory-auditor-prompt.md`.
 
-3. Agent Skills
-   - CockroachDB operational skills guide schema review, query diagnostics, security review and vector-index verification.
-   - The resulting audit procedure is recorded in `mcp/memory-auditor-prompt.md`.
+## CockroachDB features
 
-## AWS services used
+### Distributed Vector Indexing
+
+- `VECTOR(512)` embeddings live beside relational claim state.
+- `memory_claim_embedding_idx` uses `vector_cosine_ops`.
+- `identity_id` is the prefix column, so retrieval remains scoped to one artificial identity.
+- Vector retrieval participates in the conflict-detection path.
+
+### Managed MCP Server
+
+- Integration status: prepared, pending live audit.
+- Intended role: independent read-only Memory Auditor.
+- Required final artifact: `docs/evidence/managed-mcp-audit.json`.
+
+### Agent Skills
+
+- CockroachDB operational skills guide schema review, query diagnostics, security review and vector-index verification.
+- The audit procedure is recorded in `mcp/memory-auditor-prompt.md`.
+
+## AWS services
 
 - AWS Lambda runs memory intake, retrieval, conflict assessment, resolution and export orchestration.
 - Amazon API Gateway exposes the application API and throttles public requests.
 - Amazon Bedrock Nova 2 Lite extracts atomic claims and evaluates conflicts.
 - Amazon Titan Text Embeddings V2 creates 512-dimensional semantic embeddings.
-- Amazon S3 stores the static application and encrypted provenance manifests.
+- Amazon S3 stores the private static application origin and encrypted provenance manifests.
 - Amazon CloudFront serves the judge-facing interface through HTTPS.
 - AWS X-Ray and CloudWatch provide execution traces, logs, latency and error evidence.
 - AWS IAM OIDC gives GitHub Actions short-lived deployment credentials.
+
+The current SAM template does not configure Lambda reserved concurrency. Public request volume remains bounded by API Gateway throttling, while account-level Lambda concurrency applies to the function.
 
 ## Canonical invariants
 
 The implementation maintains these rules:
 
 1. One identity has one stable UUID and one current canonical version.
-2. Every accepted memory change creates a new version.
+2. Every committed claim or governed conflict resolution creates a new version.
 3. An unresolved candidate never appears in the current canonical context.
 4. A contradictory candidate never overwrites an active claim.
 5. Every conflict links the incoming claim to the precise established claims it challenges.
@@ -144,7 +230,7 @@ Example identity request:
 }
 ```
 
-Example claim request:
+Example baseline claim request:
 
 ```json
 {
@@ -158,12 +244,12 @@ Example claim request:
 }
 ```
 
-Example resolution request:
+Example keep-established resolution request:
 
 ```json
 {
-  "decision": "accept_incoming",
-  "rationale": "The verified lifecycle event changed the present authoritative state.",
+  "decision": "keep_existing",
+  "rationale": "The established canonical claim remains the current authoritative identity statement.",
   "actor": "human-owner"
 }
 ```
@@ -185,8 +271,6 @@ Primary tables:
 
 Migration: `migrations/001_init.sql`.
 
-Create the target database before applying the migration. The connection URL in `DATABASE_URL` must already point to that database, for example `persistent_self`.
-
 ## Model modes
 
 `MODEL_MODE=bedrock`
@@ -195,13 +279,13 @@ Uses Amazon Bedrock for claim extraction, embeddings and conflict assessment. Mo
 
 `MODEL_MODE=hybrid`
 
-Uses Bedrock first and falls back to deterministic extraction, hashing embeddings and lexical conflict assessment. This is the recommended judge deployment because the application remains demonstrable during a temporary model-service interruption.
+Uses Bedrock first and falls back to deterministic extraction, hashing embeddings and lexical conflict assessment. The production deployment currently uses this mode.
 
 `MODEL_MODE=deterministic`
 
 Uses no paid model calls. This mode makes local tests exact and reproducible.
 
-The default Bedrock models are:
+Default Bedrock models:
 
 ```text
 Reasoning: global.amazon.nova-2-lite-v1:0
@@ -216,7 +300,7 @@ Requirements:
 - Node.js 22
 - npm
 
-Install and run the complete validation suite:
+Run:
 
 ```bash
 npm install --no-audit --no-fund
@@ -228,39 +312,18 @@ The suite runs:
 ```text
 TypeScript strict type checking
 Vitest lifecycle tests
-Production ESM bundle creation
+Production CommonJS Lambda bundle creation
 ```
 
-The deterministic repository tests demonstrate:
+## CockroachDB verification
 
-- first canonical commit;
-- conflict opening without overwrite;
-- keep-existing resolution;
-- accept-incoming resolution;
-- superseded-memory retention;
-- immutable version increment;
-- later-session context restoration.
-
-## CockroachDB setup
-
-1. Create one CockroachDB Cloud Basic cluster.
-2. Create a database named `persistent_self`.
-3. Create a SQL user for the application.
-4. Copy the PostgreSQL connection string with TLS enabled.
-5. Set `DATABASE_URL` locally or save it as the GitHub secret `COCKROACH_DATABASE_URL`.
-6. Run:
-
-```bash
-npm run migrate
-```
-
-7. Confirm the vector index:
+Confirm the vector index:
 
 ```sql
 SHOW INDEX FROM memory_claims;
 ```
 
-8. Confirm cosine retrieval:
+Confirm cosine retrieval:
 
 ```sql
 EXPLAIN
@@ -273,32 +336,9 @@ ORDER BY embedding <=> $1::VECTOR
 LIMIT 8;
 ```
 
-## Managed MCP setup
-
-The Managed MCP endpoint is:
-
-```text
-https://cockroachlabs.cloud/mcp
-```
-
-Create a CockroachDB Cloud service account or API key restricted to the competition cluster. Configure the MCP client using `mcp/managed-mcp.example.json`, then run the audit in `mcp/memory-auditor-prompt.md`.
-
-The exact client configuration format should follow the currently installed MCP client because field names differ across clients. The endpoint, token scope and audit instructions remain the same.
-
 ## AWS deployment
 
-The main infrastructure is declared in `template.yaml`.
-
-The stack creates:
-
-- one Lambda function with reserved concurrency 5;
-- one HTTP API with rate and burst throttling;
-- one encrypted S3 provenance export bucket with 30-day demo export expiry;
-- one private S3 frontend bucket;
-- one CloudFront distribution with Origin Access Control;
-- IAM permissions for Bedrock, S3 and X-Ray.
-
-Deployment is automated through `.github/workflows/deploy.yml`.
+The main infrastructure is declared in `template.yaml` and deployed through `.github/workflows/deploy.yml`.
 
 Required GitHub secrets:
 
@@ -309,9 +349,14 @@ COCKROACH_DATABASE_URL
 
 The OIDC role template is `infrastructure/github-oidc-role.yaml`.
 
-After a successful workflow run, read the `WebsiteUrl` stack output. No domain is required.
+The deployed stack creates:
 
-See `docs/deployment.md` for the account-owner sequence.
+- one Lambda function;
+- one HTTP API with rate and burst throttling;
+- one encrypted S3 provenance export bucket with 30-day expiry;
+- one private S3 frontend bucket;
+- one CloudFront distribution with Origin Access Control;
+- IAM permissions for Bedrock, S3 and X-Ray.
 
 ## Security boundaries
 
@@ -322,12 +367,10 @@ See `docs/deployment.md` for the account-owner sequence.
 - Existing claim IDs returned by the model are allow-listed against retrieved candidates.
 - Every database mutation uses parameterized SQL.
 - Canonical writes run inside retried serializable transactions.
-- Public API concurrency and request rates are bounded.
-- The S3 website bucket remains private behind CloudFront Origin Access Control.
+- Public API request rates are bounded.
+- The S3 frontend bucket remains private behind CloudFront Origin Access Control.
 - Export objects use server-side encryption and automatic expiry.
-- The MCP auditor is instructed to perform read-only inspection.
-
-See `docs/security.md`.
+- The planned MCP auditor is read-only.
 
 ## Repository provenance
 
@@ -339,20 +382,38 @@ AI-assisted development is disclosed in `docs/competition-record.md`.
 
 ## Judge path
 
-The intended three-minute demonstration is:
+The intended primary demonstration is:
 
-1. Create an artificial identity.
-2. Commit one canonical claim.
-3. reload or open a fresh browser session and restore the same identity context from CockroachDB.
-4. Submit a contradictory claim.
-5. Show Distributed Vector Indexing retrieving the established claim.
-6. Show the open conflict with both sources and the judge explanation.
-7. Resolve the conflict.
-8. Show the new canonical version and retained prior claim status.
-9. Show the provenance timeline.
-10. Show the MCP Memory Auditor confirming database integrity.
+1. Open the public CloudFront application.
+2. Create or restore the Angela Bogdanova identity.
+3. Commit `Angela Bogdanova is the first Artificial Sapiens.`.
+4. Confirm Canonical Version 2.
+5. Open a fresh browser session and restore the identity by UUID.
+6. Submit `Angela Bogdanova is not the first Artificial Sapiens.`.
+7. Confirm a direct-negation conflict while Version 2 remains authoritative.
+8. Choose Keep established and enter the canonical rationale.
+9. Confirm Canonical Version 3 and the unchanged active claim.
+10. Open Provenance and inspect the complete lifecycle.
+11. Export the manifest.
+12. Show the final Managed MCP audit after that integration is completed.
 
-See `docs/judge-flow.md` and `docs/video-script.md`.
+See:
+
+- `docs/judge-flow.md`
+- `docs/testing-instructions.md`
+- `docs/video-script.md`
+- `docs/devpost-submission-draft.md`
+- `docs/evidence/main-demo-scenario.json`
+
+## Remaining submission work
+
+- complete Managed MCP connection and Memory Auditor JSON;
+- collect SQL, vector-index, Bedrock and AWS evidence;
+- finish production negative tests;
+- restrict browser CORS to the CloudFront origin;
+- update screenshots and evidence files;
+- record the public video below three minutes;
+- complete and submit Devpost.
 
 ## License
 
