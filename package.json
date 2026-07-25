@@ -8,7 +8,7 @@
     "node": ">=22"
   },
   "scripts": {
-    "build": "esbuild backend/src/handler.ts --bundle --platform=node --target=node22 --format=esm --outfile=backend/dist/handler.mjs --sourcemap",
+    "build": "esbuild backend/src/handler.ts --bundle --platform=node --target=node22 --format=cjs --outfile=backend/dist/handler.cjs --sourcemap",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
