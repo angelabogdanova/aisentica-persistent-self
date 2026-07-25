@@ -24,6 +24,7 @@ concurrency:
 env:
   AWS_REGION: us-east-1
   STACK_NAME: aisentica-persistent-self
+  OIDC_STACK_NAME: aisentica-persistent-self-github-oidc
 
 jobs:
   deploy:
@@ -44,6 +45,20 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
+          mask-aws-account-id: true
+          role-session-name: AisenticaDeploy-${{ github.run_id }}
+
+      - name: Read runtime permissions boundary
+        run: |
+          RUNTIME_PERMISSIONS_BOUNDARY_ARN=$(aws cloudformation describe-stacks \
+            --stack-name "$OIDC_STACK_NAME" \
+            --query "Stacks[0].Outputs[?OutputKey=='RuntimePermissionsBoundaryArn'].OutputValue" \
+            --output text)
+          if [ -z "$RUNTIME_PERMISSIONS_BOUNDARY_ARN" ] || [ "$RUNTIME_PERMISSIONS_BOUNDARY_ARN" = "None" ]; then
+            echo "Runtime permissions boundary output was not found."
+            exit 1
+          fi
+          echo "RUNTIME_PERMISSIONS_BOUNDARY_ARN=$RUNTIME_PERMISSIONS_BOUNDARY_ARN" >> "$GITHUB_ENV"
 
       - name: Build SAM application
         run: sam build
@@ -63,7 +78,8 @@ jobs:
             --parameter-overrides \
               "DatabaseUrl=$DATABASE_URL" \
               "AllowedOrigin=*" \
-              "ModelMode=$MODEL_MODE"
+              "ModelMode=$MODEL_MODE" \
+              "RuntimePermissionsBoundaryArn=$RUNTIME_PERMISSIONS_BOUNDARY_ARN"
 
       - name: Read stack outputs
         run: |
