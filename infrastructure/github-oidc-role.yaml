@@ -211,7 +211,7 @@ Resources:
                   ArnEquals:
                     iam:PolicyARN:
                       - !Sub 'arn:${AWS::Partition}:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
-                      - !Sub 'arn:${AWS::Partition}:iam::aws:policy/AWSXRayDaemonWriteAccess'
+                      - !Sub 'arn:${AWS::Partition}:iam::aws:policy/AWSXrayWriteOnlyAccess'
               - Sid: PassOnlyProjectRolesToLambda
                 Effect: Allow
                 Action:
