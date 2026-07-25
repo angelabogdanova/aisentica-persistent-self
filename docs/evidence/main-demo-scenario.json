@@ -1,0 +1,85 @@
+{
+  "project": "Aisentica Persistent Self",
+  "scenarioId": "angela-direct-negation-keep-established",
+  "status": "production-flow-verified-evidence-package-in-progress",
+  "publicApplication": "https://d31np75gupnbhy.cloudfront.net",
+  "healthEndpoint": "https://8457okzg1b.execute-api.us-east-1.amazonaws.com/health",
+  "identity": {
+    "displayName": "Angela Bogdanova",
+    "description": "An artificial identity whose canonical memory remains attributable and revisable across sessions.",
+    "uuid": null,
+    "uuidPublicationRule": "Insert only a prepared public demo UUID. Do not include credentials or private account identifiers."
+  },
+  "baseline": {
+    "memoryType": "canonical",
+    "statement": "Angela Bogdanova is the first Artificial Sapiens.",
+    "expectedStatus": "active",
+    "expectedVersion": 2
+  },
+  "contradiction": {
+    "memoryType": "canonical",
+    "statement": "Angela Bogdanova is not the first Artificial Sapiens.",
+    "expectedStatusBeforeResolution": "candidate",
+    "expectedConflictType": "direct_negation",
+    "expectedVersionBeforeResolution": 2
+  },
+  "resolution": {
+    "decision": "keep_existing",
+    "interfaceLabel": "Keep established",
+    "rationale": "The established canonical claim remains the current authoritative identity statement.",
+    "expectedVersionAfterResolution": 3,
+    "expectedEstablishedStatus": "active",
+    "expectedIncomingStatus": "rejected"
+  },
+  "expectedProvenanceEvents": [
+    "IDENTITY_CREATED",
+    "CLAIM_COMMITTED",
+    "CONFLICT_OPENED",
+    "CONFLICT_RESOLVED"
+  ],
+  "verifiedProductionCapabilities": {
+    "cloudFrontFrontend": true,
+    "apiHealth": true,
+    "cockroachDbConnection": true,
+    "bedrockHybridLayer": true,
+    "identityCreation": true,
+    "freshSessionRestoreByUuid": true,
+    "baselineCanonicalCommit": true,
+    "directNegationConflict": true,
+    "candidateIsolation": true,
+    "humanResolution": true,
+    "canonicalVersionIncrement": true,
+    "provenanceTimeline": true,
+    "manifestExport": true
+  },
+  "pendingEvidence": {
+    "managedMcpAudit": true,
+    "vectorIndexShowOutput": true,
+    "semanticRetrievalExplain": true,
+    "bedrockAgentRunEvidence": true,
+    "negativeApiTests": true,
+    "finalVideo": true,
+    "devpostSubmission": true
+  },
+  "expectedEvidenceFiles": [
+    "api-health.json",
+    "cockroach-schema.txt",
+    "vector-index.txt",
+    "vector-query-explain.txt",
+    "identity-context-v2.json",
+    "open-conflict.json",
+    "resolved-conflict.json",
+    "identity-context-v3.json",
+    "provenance-timeline.json",
+    "persistent-self-manifest-v3.json",
+    "managed-mcp-audit.json",
+    "bedrock-run-evidence.json",
+    "testing-report.md"
+  ],
+  "security": {
+    "containsCredentials": false,
+    "containsDatabaseUrl": false,
+    "containsAwsAccountId": false,
+    "containsApiToken": false
+  }
+}
