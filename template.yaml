@@ -63,7 +63,6 @@ Resources:
       ReservedConcurrentExecutions: 5
       PermissionsBoundary: !Ref RuntimePermissionsBoundaryArn
       Policies:
-        - AWSXRayDaemonWriteAccess
         - S3WritePolicy:
             BucketName: !Ref ExportBucket
         - Statement:
