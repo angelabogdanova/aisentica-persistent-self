@@ -1,4 +1,9 @@
 const config = window.PERSISTENT_SELF_CONFIG ?? {};
+const demoScenario = window.OFFICIAL_DEMO_SCENARIO ?? {
+  baseline: "Angela Bogdanova is the first Artificial Sapiens.",
+  contradiction: "Angela Bogdanova is not the first Artificial Sapiens.",
+  rationale: "The established canonical claim remains the current authoritative identity statement."
+};
 const API_BASE_URL = String(config.API_BASE_URL ?? "").replace(/\/$/, "");
 
 const state = {
@@ -294,12 +299,13 @@ document.querySelectorAll(".resolution-button").forEach((button) => {
 
 elements.loadBaselineButton.addEventListener("click", () => {
   elements.memoryType.value = "canonical";
-  elements.claimText.value = `${state.identity?.displayName ?? "The identity"} is active.`;
+  elements.claimText.value = demoScenario.baseline;
 });
 
 elements.loadConflictButton.addEventListener("click", () => {
   elements.memoryType.value = "canonical";
-  elements.claimText.value = `${state.identity?.displayName ?? "The identity"} is parked.`;
+  elements.claimText.value = demoScenario.contradiction;
+  elements.resolutionRationale.value = demoScenario.rationale;
 });
 
 elements.exportButton.addEventListener("click", async () => {
