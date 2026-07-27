@@ -1,6 +1,6 @@
 # Devpost Submission Draft
 
-Status: working draft. Final submission remains pending.
+Status: working draft. Managed MCP evidence is complete; final evidence, video and submission remain pending.
 
 ## Project title
 
@@ -63,13 +63,19 @@ Incoming contradictory claim:
 Angela Bogdanova is not the first Artificial Sapiens.
 ```
 
-The incoming statement opens a direct-negation conflict and remains outside Current Canon. The human owner selects Keep established with the rationale:
+The incoming statement opens a direct-negation conflict and remains outside Current Canon. The human owner selects Keep established with the judge-facing rationale:
 
 ```text
 The established canonical claim remains the current authoritative identity statement.
 ```
 
 The resulting Canonical Version 3 preserves the established claim as active, records the contradictory candidate as rejected and appends the resolution to the immutable provenance ledger.
+
+The prepared production identity inspected by Managed MCP is:
+
+```text
+69a5dccd-a3b6-4072-9ad6-9dbe015e6aa5
+```
 
 ## How we built it
 
@@ -121,17 +127,36 @@ vector_cosine_ops
 identity_id prefix
 ```
 
-Final SQL and `EXPLAIN` evidence are being assembled for the submission package.
+The completed Managed MCP audit independently verified the column type and index definition. For the audited two-claim data set, the tested semantic `EXPLAIN` selected a conventional identity-scoped index plus top-k sorting rather than the vector index. The final evidence records the selected plan exactly instead of overstating index use for that specific query.
 
 ### Managed MCP Server
 
-The Memory Auditor integration is prepared and remains pending final live connection.
+Completed on July 27, 2026 through the official CockroachDB Cloud Managed MCP endpoint.
 
-The auditor will inspect the same production memory layer through a cluster-scoped, read-only MCP path. It will verify schema, vector index, claim states, conflict links, resolution integrity, canonical snapshots and provenance, then produce a sanitized audit JSON.
+The Memory Auditor connected to the production competition cluster and inspected the same memory layer used by the public application. It used strictly read-only Managed MCP tools plus `SHOW`, `SELECT` and `EXPLAIN`; no mutations were attempted.
+
+The audit verified the production schema, `VECTOR(512)`, `memory_claim_embedding_idx`, claim statuses, the Angela Bogdanova identity, the direct-negation conflict, the keep-established resolution, Canonical Version 3, provenance, latest snapshot membership, sources and successful agent runs.
+
+Final result:
+
+```text
+16 passed
+2 warnings
+0 failed
+88.89 percent
+```
+
+Sanitized artifact:
+
+```text
+docs/evidence/managed-mcp-audit.json
+```
+
+The two warnings are preserved as audit evidence: Managed MCP blocked direct access to `information_schema.tables` while allowed SHOW-backed tools completed schema discovery, and the current schema does not contain a machine-verifiable actor-type field.
 
 ### Agent Skills
 
-CockroachDB operational skills guide schema review, vector-index verification, query diagnostics and security checks. The repeatable audit sequence is recorded in `mcp/memory-auditor-prompt.md`.
+CockroachDB operational skills guide schema review, vector-index verification, query diagnostics and security checks. The repeatable audit sequence is recorded in `mcp/memory-auditor-prompt.md`, and the resilient execution path is stored in `scripts/run-managed-mcp-audit.sh`.
 
 ## Challenges
 
@@ -142,6 +167,8 @@ A vector store can retrieve similar text, but similarity alone does not determin
 A second challenge was production deployment without permanent AWS access keys. GitHub Actions now assumes a constrained AWS role through OIDC and deploys the complete stack through SAM and CloudFormation.
 
 A third challenge was preserving live-demo reliability while still using AWS AI services meaningfully. Hybrid model mode keeps Bedrock in the primary path and supplies deterministic fallback when a model invocation is temporarily unavailable.
+
+A fourth challenge was creating independent infrastructure evidence without giving an auditor mutation authority. The official Managed MCP path remained strictly read-only and its security policy rejected restricted-schema access while still permitting the SHOW-backed inspection needed to complete the audit.
 
 ## Accomplishments
 
@@ -157,7 +184,9 @@ A third challenge was preserving live-demo reliability while still using AWS AI 
 - exported portable provenance manifests;
 - deployed a public AWS application;
 - configured short-lived GitHub OIDC deployment;
-- completed a live end-to-end conflict demonstration.
+- completed a live end-to-end conflict demonstration;
+- connected the official CockroachDB Cloud Managed MCP Server;
+- completed and preserved a sanitized read-only production audit.
 
 ## What we learned
 
@@ -165,17 +194,18 @@ Persistent identity is not achieved by storing more conversation. It is achieved
 
 Distributed SQL and vector retrieval become much more powerful when they participate in the same lifecycle. CockroachDB can store semantic neighbours, transactional status, canonical versions and provenance without splitting identity across unrelated systems.
 
-We also learned that a strong agentic-memory demo needs two proof surfaces: the public product behavior and an independent infrastructure audit. The application proves how memory behaves; the planned Managed MCP Memory Auditor will prove how the memory substrate is structured.
+We also learned that a strong agentic-memory demo needs two proof surfaces: the public product behavior and an independent infrastructure audit. The application proves how memory behaves; the Managed MCP Memory Auditor proves how the memory substrate is structured.
+
+The audit also demonstrated an important principle: evidence is stronger when it preserves warnings. The final JSON records both successful verification and the exact boundaries of what the current schema and query plan prove.
 
 ## What is next
 
 Before final submission:
 
-- complete the live Managed MCP connection;
-- run the Memory Auditor and save the sanitized audit JSON;
-- capture SQL, vector-index and Bedrock evidence;
+- capture standalone SQL, vector-index and Bedrock evidence;
 - complete the remaining negative and mutation tests;
 - restrict browser CORS to the CloudFront origin;
+- complete screenshots and the architecture image;
 - record the final video below three minutes;
 - verify all links and evidence from a clean browser;
 - submit the final Devpost entry.
@@ -186,7 +216,7 @@ After the hackathon, the project can become a persistence layer for long-lived r
 
 - CockroachDB Cloud
 - CockroachDB Distributed Vector Indexing
-- CockroachDB Managed MCP Server integration in progress
+- CockroachDB Cloud Managed MCP Server
 - CockroachDB Agent Skills
 - AWS Lambda
 - Amazon API Gateway
@@ -199,6 +229,7 @@ After the hackathon, the project can become a persistence layer for long-lived r
 - AWS CloudWatch
 - AWS X-Ray
 - GitHub Actions
+- OpenAI Codex CLI
 - TypeScript
 - Node.js 22
 - HTML
