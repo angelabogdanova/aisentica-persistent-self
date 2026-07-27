@@ -1,14 +1,14 @@
 {
   "project": "Aisentica Persistent Self",
   "scenarioId": "angela-direct-negation-keep-established",
-  "status": "production-flow-verified-evidence-package-in-progress",
+  "status": "production-flow-and-managed-mcp-audit-verified-evidence-package-in-progress",
   "publicApplication": "https://d31np75gupnbhy.cloudfront.net",
   "healthEndpoint": "https://8457okzg1b.execute-api.us-east-1.amazonaws.com/health",
   "identity": {
     "displayName": "Angela Bogdanova",
     "description": "An artificial identity whose canonical memory remains attributable and revisable across sessions.",
-    "uuid": null,
-    "uuidPublicationRule": "Insert only a prepared public demo UUID. Do not include credentials or private account identifiers."
+    "uuid": "69a5dccd-a3b6-4072-9ad6-9dbe015e6aa5",
+    "uuidPublicationRule": "This is the prepared public demo identity UUID. It is not a credential or private account identifier."
   },
   "baseline": {
     "memoryType": "canonical",
@@ -20,6 +20,7 @@
     "memoryType": "canonical",
     "statement": "Angela Bogdanova is not the first Artificial Sapiens.",
     "expectedStatusBeforeResolution": "candidate",
+    "expectedStatusAfterResolution": "rejected",
     "expectedConflictType": "direct_negation",
     "expectedVersionBeforeResolution": 2
   },
@@ -27,6 +28,8 @@
     "decision": "keep_existing",
     "interfaceLabel": "Keep established",
     "rationale": "The established canonical claim remains the current authoritative identity statement.",
+    "recordedProductionRationale": "The selected claim best represents the current authoritative state.",
+    "recordedActor": "demo-owner",
     "expectedVersionAfterResolution": 3,
     "expectedEstablishedStatus": "active",
     "expectedIncomingStatus": "rejected"
@@ -50,12 +53,23 @@
     "humanResolution": true,
     "canonicalVersionIncrement": true,
     "provenanceTimeline": true,
-    "manifestExport": true
+    "manifestExport": true,
+    "managedMcpConnection": true,
+    "managedMcpReadOnlyAudit": true
+  },
+  "managedMcpAudit": {
+    "path": "docs/evidence/managed-mcp-audit.json",
+    "generatedAt": "2026-07-27T17:38:53.872067Z",
+    "mode": "strictly-read-only",
+    "passed": 16,
+    "warnings": 2,
+    "failed": 0,
+    "percent": 88.89,
+    "containsCredentials": false
   },
   "pendingEvidence": {
-    "managedMcpAudit": true,
     "vectorIndexShowOutput": true,
-    "semanticRetrievalExplain": true,
+    "semanticRetrievalExplainStandalone": true,
     "bedrockAgentRunEvidence": true,
     "negativeApiTests": true,
     "finalVideo": true,

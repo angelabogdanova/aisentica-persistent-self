@@ -33,9 +33,12 @@ Current verified production state:
 - human-governed conflict resolution verified;
 - canonical version increment verified;
 - provenance timeline verified;
-- manifest export verified.
+- manifest export verified;
+- official CockroachDB Cloud Managed MCP Server connected;
+- strictly read-only Memory Auditor completed against the production database;
+- sanitized audit JSON committed with 16 passed, 2 warnings and 0 failed checks.
 
-Managed MCP integration, the final evidence package, video and Devpost submission remain in progress.
+The remaining work is the final standalone evidence package, production negative tests, CORS hardening, screenshots, video and Devpost submission.
 
 ## Core demonstration
 
@@ -45,16 +48,22 @@ The system performs one complete identity-memory cycle:
 Identity → Claim → Source → Vector Retrieval → Conflict Judge → Human Resolution → New Canonical Version → Provenance Export
 ```
 
-A new statement never silently overwrites an established claim. The system retrieves semantically related memory, evaluates incompatibility, opens a conflict case, presents both versions and preserves the human resolution as a new immutable canonical snapshot.
+A new statement never silently overwrites an established claim. The system retrieves semantically related memory, evaluates incompatibility, opens a conflict case, presents both versions and preserves the resolution as a new immutable canonical snapshot.
 
 ## Official main demo scenario
 
-The repository, interface, testing instructions, video script, Devpost draft and evidence template use one primary scenario.
+The repository, interface, testing instructions, video script, Devpost draft and evidence package use one primary scenario.
 
 Identity:
 
 ```text
 Angela Bogdanova
+```
+
+Prepared production identity UUID:
+
+```text
+69a5dccd-a3b6-4072-9ad6-9dbe015e6aa5
 ```
 
 Baseline canonical claim:
@@ -69,13 +78,13 @@ Incoming contradictory claim:
 Angela Bogdanova is not the first Artificial Sapiens.
 ```
 
-Primary human decision:
+Primary decision:
 
 ```text
 Keep established
 ```
 
-Resolution rationale:
+Judge-facing rationale:
 
 ```text
 The established canonical claim remains the current authoritative identity statement.
@@ -87,7 +96,7 @@ Expected result:
 2. The contradictory claim becomes a candidate.
 3. A direct-negation conflict opens.
 4. Version 2 remains authoritative while the conflict is unresolved.
-5. The human owner keeps the established claim.
+5. The owner keeps the established claim.
 6. Canonical Version 3 records the governed resolution.
 7. The incoming candidate is rejected.
 8. The established claim remains active.
@@ -135,28 +144,71 @@ Browser
       → Amazon Titan Text Embeddings V2
       → CockroachDB Cloud
       → encrypted Amazon S3 provenance export
+
+Codex CLI
+  → CockroachDB Cloud Managed MCP Server
+  → read-only Memory Auditor
+  → the same CockroachDB production memory layer
 ```
 
 CockroachDB contains transactional identity data, structured claims, embeddings, conflict state, canonical versions and the provenance ledger in one distributed SQL system.
 
 GitHub Actions deploys through AWS IAM OIDC with short-lived credentials. The deployment workflow reads CloudFormation outputs, creates the frontend API configuration, publishes the static application and invalidates CloudFront.
 
-## Planned Managed MCP audit path
+## Completed Managed MCP audit
 
-The official CockroachDB Cloud Managed MCP Server is the remaining second CockroachDB competition integration.
+The official CockroachDB Cloud Managed MCP Server was connected on July 27, 2026 through:
 
-The prepared Memory Auditor will inspect the same CockroachDB memory layer used by the public application. Its read-only audit will verify:
+```text
+AWS CloudShell → Codex CLI → https://cockroachlabs.cloud/mcp
+```
 
-- the target database and schema;
-- `VECTOR(512)` storage;
-- `memory_claim_embedding_idx`;
-- active, candidate, superseded and rejected claim counts;
-- conflict links and resolutions;
-- latest canonical snapshot membership;
-- provenance completeness;
-- semantic retrieval query eligibility.
+The Memory Auditor inspected the same `persistent_self` database used by the public application. The audit was strictly read-only and used Managed MCP schema tools plus `SHOW`, `SELECT` and `EXPLAIN`. No mutation was attempted.
 
-The MCP path is documented and prepared, but the final live connection and audit JSON have not yet been completed. See `docs/mcp-memory-auditor.md` and `mcp/memory-auditor-prompt.md`.
+Sanitized evidence:
+
+```text
+docs/evidence/managed-mcp-audit.json
+```
+
+Result:
+
+```text
+16 passed
+2 warnings
+0 failed
+88.89 percent
+```
+
+Verified evidence includes:
+
+- cluster `persistent-self`, CockroachDB v26.2.1, AWS `us-east-1`, BASIC plan;
+- database `persistent_self` and all ten application tables;
+- `memory_claims.embedding` as `VECTOR(512)`;
+- `memory_claim_embedding_idx` with `identity_id` prefix and `vector_cosine_ops`;
+- one active and one rejected claim;
+- the prepared Angela Bogdanova identity at Canonical Version 3;
+- the established and contradictory claims;
+- the direct-negation conflict link;
+- the `keep_existing` resolution;
+- four matching provenance events;
+- latest snapshot membership;
+- matching sources and successful `MEMORY_ANALYSIS` agent runs;
+- a semantic retrieval `EXPLAIN` using a real stored embedding.
+
+The audit preserves two warnings:
+
+1. Managed MCP blocked direct `information_schema.tables` access under its security policy. Allowed SHOW-backed tools completed schema discovery.
+2. The current schema records actor as `demo-owner` but has no `actor_type` or `human_verified` field, so the human nature of that actor cannot be machine-confirmed without inference.
+
+The tested semantic query plan selected a conventional identity-scoped index plus top-k sorting for the current two-claim data set. The vector index exists and is independently verified, while this specific plan did not select it.
+
+See:
+
+- `docs/mcp-memory-auditor.md`
+- `mcp/memory-auditor-prompt.md`
+- `scripts/run-managed-mcp-audit.sh`
+- `docs/evidence/managed-mcp-audit.json`
 
 ## CockroachDB features
 
@@ -166,17 +218,20 @@ The MCP path is documented and prepared, but the final live connection and audit
 - `memory_claim_embedding_idx` uses `vector_cosine_ops`.
 - `identity_id` is the prefix column, so retrieval remains scoped to one artificial identity.
 - Vector retrieval participates in the conflict-detection path.
+- The schema and index definition were independently verified through Managed MCP.
 
 ### Managed MCP Server
 
-- Integration status: prepared, pending live audit.
-- Intended role: independent read-only Memory Auditor.
-- Required final artifact: `docs/evidence/managed-mcp-audit.json`.
+- Integration status: completed.
+- Role: independent, strictly read-only Memory Auditor.
+- Production audit result: 16 passed, 2 warnings, 0 failed.
+- Evidence artifact: `docs/evidence/managed-mcp-audit.json`.
 
 ### Agent Skills
 
 - CockroachDB operational skills guide schema review, query diagnostics, security review and vector-index verification.
 - The audit procedure is recorded in `mcp/memory-auditor-prompt.md`.
+- The reproducible runner is `scripts/run-managed-mcp-audit.sh`.
 
 ## AWS services
 
@@ -336,6 +391,8 @@ ORDER BY embedding <=> $1::VECTOR
 LIMIT 8;
 ```
 
+The evidence package records the actual selected plan rather than assuming that a small production data set must use the vector index.
+
 ## AWS deployment
 
 The main infrastructure is declared in `template.yaml` and deployed through `.github/workflows/deploy.yml`.
@@ -370,7 +427,8 @@ The deployed stack creates:
 - Public API request rates are bounded.
 - The S3 frontend bucket remains private behind CloudFront Origin Access Control.
 - Export objects use server-side encryption and automatic expiry.
-- The planned MCP auditor is read-only.
+- The Managed MCP auditor is strictly read-only.
+- The committed audit contains no API token, database URL, AWS account identifier, email address or private credential.
 
 ## Repository provenance
 
@@ -395,7 +453,7 @@ The intended primary demonstration is:
 9. Confirm Canonical Version 3 and the unchanged active claim.
 10. Open Provenance and inspect the complete lifecycle.
 11. Export the manifest.
-12. Show the final Managed MCP audit after that integration is completed.
+12. Show the completed Managed MCP audit and its `16 pass / 2 warning / 0 failed` result.
 
 See:
 
@@ -404,14 +462,14 @@ See:
 - `docs/video-script.md`
 - `docs/devpost-submission-draft.md`
 - `docs/evidence/main-demo-scenario.json`
+- `docs/evidence/managed-mcp-audit.json`
 
 ## Remaining submission work
 
-- complete Managed MCP connection and Memory Auditor JSON;
-- collect SQL, vector-index, Bedrock and AWS evidence;
-- finish production negative tests;
+- collect standalone SQL, vector-index, Bedrock and AWS evidence;
+- finish production negative and mutation tests;
 - restrict browser CORS to the CloudFront origin;
-- update screenshots and evidence files;
+- update screenshots, architecture image and remaining evidence files;
 - record the public video below three minutes;
 - complete and submit Devpost.
 

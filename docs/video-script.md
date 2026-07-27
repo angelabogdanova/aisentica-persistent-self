@@ -100,17 +100,25 @@ Show Version 3, the active claim and the provenance timeline. Highlight identity
 
 Voiceover:
 
-The application exports a portable provenance manifest. Through CockroachDB Cloud Managed MCP, the final Memory Auditor independently checks schema, vector index, conflict links, resolution and snapshot consistency.
+The application exports a portable provenance manifest. Through CockroachDB Cloud Managed MCP, an independent read-only Memory Auditor verifies the production schema, VECTOR storage, vector index, conflict links, resolution, Canonical Version 3 and provenance.
 
 Screen:
 
-Show manifest export. After the Managed MCP integration is completed, show the compact audit result, such as:
+Show manifest export, then show the committed file:
 
 ```text
-10/10 checks passed
+docs/evidence/managed-mcp-audit.json
 ```
 
-Until the live MCP audit exists, record this segment only after the final evidence file has been produced.
+Highlight the compact audit result:
+
+```text
+16 passed
+2 warnings
+0 failed
+```
+
+Briefly show that the audit mode is strictly read-only and contains no credentials.
 
 ## 2:36–2:50 — AWS and CockroachDB architecture
 
@@ -124,6 +132,8 @@ Architecture diagram:
 
 ```text
 Browser → CloudFront + S3 → API Gateway → Lambda → Bedrock ↔ CockroachDB
+                                                        ↑
+                                             Managed MCP Auditor
 ```
 
 ## 2:50–2:55 — Final formula

@@ -122,6 +122,27 @@ CONFLICT_RESOLVED
 4. Inspect the JSON locally.
 5. Confirm it contains the identity, current context, version and ordered provenance events.
 
+## Prepared read-only judge identity
+
+The completed Managed MCP audit inspected this production identity:
+
+```text
+69a5dccd-a3b6-4072-9ad6-9dbe015e6aa5
+```
+
+This UUID addresses public demonstration data and is not a credential.
+
+Expected current state:
+
+```text
+Identity: Angela Bogdanova
+Current version: 3
+Active claim: Angela Bogdanova is the first Artificial Sapiens.
+Rejected claim: Angela Bogdanova is not the first Artificial Sapiens.
+Resolved conflict type: direct_negation
+Decision: keep_existing
+```
+
 ## Secondary API and invariant tests
 
 These tests are engineering evidence and do not replace the primary judge narrative.
@@ -192,7 +213,7 @@ The resolution and rationale remain in provenance.
 
 ## CockroachDB evidence checks
 
-The final evidence package should include sanitized output for:
+The final evidence package should include sanitized standalone output for:
 
 ```sql
 SHOW COLUMNS FROM memory_claims;
@@ -218,24 +239,66 @@ vector_cosine_ops
 identity_id prefix
 ```
 
-Run `EXPLAIN` on the identity-scoped semantic retrieval query and record whether the distributed vector index is eligible.
+Run `EXPLAIN` on the identity-scoped semantic retrieval query and record the selected plan exactly.
+
+The completed Managed MCP audit already verified that the vector index exists. For the audited two-claim data set, the tested query plan selected `memory_claims_subject_predicate_idx`, an index join to the primary key and top-k sorting rather than the vector index. The standalone evidence must preserve that factual result without claiming index selection that did not occur.
 
 ## Managed MCP test
 
-Status: pending.
+Status: completed on July 27, 2026.
 
-After Managed MCP is connected:
+Connection path:
 
-1. Select only the competition cluster.
-2. Run `mcp/memory-auditor-prompt.md`.
-3. Confirm the auditor is read-only.
-4. Confirm the auditor finds the official Angela scenario.
-5. Confirm schema, vector index, conflict, resolution, snapshot and provenance checks pass.
-6. Save the sanitized result as:
+```text
+AWS CloudShell → Codex CLI → CockroachDB Cloud Managed MCP
+```
+
+Endpoint:
+
+```text
+https://cockroachlabs.cloud/mcp
+```
+
+The auditor used the production competition cluster, the `persistent_self` database and strictly read-only operations.
+
+Completed checks include:
+
+1. production cluster metadata;
+2. application database and schema;
+3. `VECTOR(512)` embedding column;
+4. `memory_claim_embedding_idx` and identity prefix;
+5. claim counts by status;
+6. prepared Angela Bogdanova identity;
+7. established and contradictory claims;
+8. direct-negation conflict link;
+9. keep-established resolution;
+10. Canonical Version 3;
+11. provenance lifecycle;
+12. latest snapshot membership;
+13. sources;
+14. successful agent runs;
+15. semantic-query `EXPLAIN`;
+16. table counts and read-only completion.
+
+Final result:
+
+```text
+16 passed
+2 warnings
+0 failed
+88.89 percent
+```
+
+Sanitized evidence:
 
 ```text
 docs/evidence/managed-mcp-audit.json
 ```
+
+Warning interpretation:
+
+- direct `information_schema.tables` access was blocked by Managed MCP policy; allowed SHOW-backed schema tools completed discovery;
+- the current schema records actor as `demo-owner` but has no `actor_type` or `human_verified` field, so human authorship cannot be machine-confirmed without inference.
 
 ## Pass criteria
 
@@ -250,5 +313,6 @@ The project passes production verification when:
 - provenance records the complete lifecycle;
 - manifest export succeeds;
 - SQL and vector evidence are captured;
-- Managed MCP audit is completed;
+- Managed MCP audit is completed and committed;
+- remaining negative and mutation tests pass;
 - no evidence file contains credentials or private account identifiers.
