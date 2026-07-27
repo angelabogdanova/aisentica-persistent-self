@@ -38,6 +38,7 @@ AI assistance contributed to:
 - interface design;
 - technical documentation;
 - production debugging;
+- Managed MCP integration and audit execution;
 - video planning;
 - Devpost drafting.
 
@@ -66,16 +67,58 @@ Completed:
 - canonical version increment;
 - provenance timeline;
 - manifest export;
-- green CI and deployment workflows.
+- green CI and deployment workflows;
+- live CockroachDB Cloud Managed MCP connection;
+- strictly read-only Memory Auditor execution;
+- sanitized Managed MCP audit JSON committed to the evidence package.
 
 Pending:
 
-- live CockroachDB Managed MCP connection;
-- Memory Auditor execution and audit JSON;
-- final SQL, vector and Bedrock evidence package;
+- final standalone SQL, vector and Bedrock evidence package;
 - remaining negative and mutation tests;
+- CORS restriction to the CloudFront origin;
+- final screenshots and architecture image;
 - final public video;
 - completed Devpost submission.
+
+## Managed MCP completion record
+
+Completed on July 27, 2026 through the official CockroachDB Cloud Managed MCP endpoint:
+
+```text
+https://cockroachlabs.cloud/mcp
+```
+
+Client path:
+
+```text
+AWS CloudShell → Codex CLI → CockroachDB Cloud Managed MCP
+```
+
+Audit mode:
+
+```text
+strictly read-only
+SHOW, SELECT and EXPLAIN only
+no mutations attempted
+```
+
+Sanitized evidence:
+
+```text
+docs/evidence/managed-mcp-audit.json
+```
+
+Result:
+
+```text
+16 passed
+2 warnings
+0 failed
+88.89 percent
+```
+
+The warnings are preserved as factual audit findings. Managed MCP blocked direct access to `information_schema.tables`, while SHOW-backed schema tools completed discovery. The current schema also records actor as a string but does not contain a machine-verifiable actor-type field.
 
 ## Unified competition scenario
 
@@ -99,11 +142,19 @@ Resolution:
 Keep established
 ```
 
-Rationale:
+Canonical rationale used in judge-facing instructions:
 
 ```text
 The established canonical claim remains the current authoritative identity statement.
 ```
+
+The audited production record contains the rationale:
+
+```text
+The selected claim best represents the current authoritative state.
+```
+
+Both rationales express the same keep-established decision. The evidence package records the exact production value rather than rewriting it.
 
 ## Competition requirements map
 
@@ -111,16 +162,16 @@ The established canonical claim remains the current authoritative identity state
 |---|---|---|
 | Agentic application | Memory Intake, semantic retrieval, Conflict Judge and human resolution | Complete |
 | Persistent memory | CockroachDB identities, claims, sources, snapshots and provenance ledger | Complete |
-| CockroachDB tool 1 | Distributed Vector Indexing with `VECTOR(512)` and `memory_claim_embedding_idx` | Implemented; final query evidence pending |
-| CockroachDB tool 2 | Managed MCP Server with read-only Memory Auditor | Prepared; live audit pending |
-| Additional CockroachDB tool | Agent Skills operational audit workflow | Prepared |
+| CockroachDB tool 1 | Distributed Vector Indexing with `VECTOR(512)` and `memory_claim_embedding_idx` | Implemented and independently verified by Managed MCP; final standalone SQL evidence pending |
+| CockroachDB tool 2 | Managed MCP Server with read-only Memory Auditor | Complete; audit JSON committed |
+| Additional CockroachDB tool | Agent Skills operational audit workflow | Complete as documented repeatable procedure |
 | AWS deployment | Lambda, API Gateway, Bedrock, S3, CloudFront, X-Ray and CloudWatch | Complete |
 | Public repository | `angelabogdanova/aisentica-persistent-self` | Complete |
 | Open-source license | MIT | Complete |
 | Working demo | `https://d31np75gupnbhy.cloudfront.net` | Complete |
 | API health | `https://8457okzg1b.execute-api.us-east-1.amazonaws.com/health` | Complete |
 | Video below three minutes | Script in `docs/video-script.md` | Recording pending |
-| CockroachDB layer shown | UI conflict flow, SQL/vector evidence and MCP Memory Auditor segment | Partial; MCP and evidence pending |
+| CockroachDB layer shown | UI conflict flow, SQL/vector evidence and Managed MCP Memory Auditor | MCP complete; remaining evidence and video pending |
 
 ## Official source snapshot
 
