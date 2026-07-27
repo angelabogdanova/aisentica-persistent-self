@@ -1,0 +1,36 @@
+Aisentica Persistent Self — Source Validation
+Executed at: 2026-07-27T20:49:40Z
+Node: v22.23.1
+npm: 10.9.8
+
+
+> aisentica-persistent-self@0.1.0 check
+> npm run typecheck && npm test && npm run build
+
+
+> aisentica-persistent-self@0.1.0 typecheck
+> tsc --noEmit
+
+
+> aisentica-persistent-self@0.1.0 test
+> vitest run
+
+
+ RUN  v3.2.7 /home/cloudshell-user/aisentica-persistent-self
+
+ ✓ backend/test/memory-engine.test.ts (6 tests) 22ms
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  20:49:51
+   Duration  1.19s (transform 344ms, setup 0ms, collect 492ms, tests 22ms, environment 0ms, prepare 240ms)
+
+
+> aisentica-persistent-self@0.1.0 build
+> esbuild backend/src/handler.ts --bundle --platform=node --target=node22 --format=cjs --outfile=backend/dist/handler.cjs --sourcemap
+
+
+  backend/dist/handler.cjs      1.8mb ⚠️
+  backend/dist/handler.cjs.map  2.8mb
+
+⚡ Done in 608ms

@@ -1,0 +1,47 @@
+{
+  "generatedAt": "2026-07-27T20:31:03Z",
+  "region": "us-east-1",
+  "mainStack": {
+    "stackName": "aisentica-persistent-self",
+    "status": "UPDATE_COMPLETE",
+    "createdAt": "2026-07-25T14:52:32.707000+00:00",
+    "updatedAt": "2026-07-25T16:07:54.748000+00:00"
+  },
+  "githubOidcStack": {
+    "stackName": "aisentica-persistent-self-github-oidc",
+    "status": "UPDATE_COMPLETE",
+    "createdAt": "2026-07-25T12:39:12.989000+00:00",
+    "updatedAt": "2026-07-25T14:32:32.796000+00:00"
+  },
+  "lambda": {
+    "functionName": "aisentica-persistent-self-MemoryFunction-y0G8KwWrCzNE",
+    "runtime": "nodejs22.x",
+    "state": "Active",
+    "lastUpdateStatus": "Successful",
+    "lastModified": "2026-07-25T16:07:59.000+0000",
+    "memorySizeMB": 512,
+    "timeoutSeconds": 35,
+    "architectures": [
+      "arm64"
+    ],
+    "packageType": "Zip",
+    "codeSha256": "7PLzs8Q35h47+D7yNl15rGWqoXYiRli/suAjj7bsZdw=",
+    "environment": {
+      "variableNames": [
+        "ALLOWED_ORIGIN",
+        "BEDROCK_EMBEDDING_MODEL_ID",
+        "BEDROCK_REASONING_MODEL_ID",
+        "DATABASE_URL",
+        "EMBEDDING_DIMENSIONS",
+        "EXPORT_BUCKET",
+        "MODEL_MODE",
+        "NODE_OPTIONS"
+      ],
+      "modelMode": "hybrid",
+      "embeddingDimensions": "512",
+      "reasoningModelId": "global.amazon.nova-2-lite-v1:0",
+      "embeddingModelId": "amazon.titan-embed-text-v2:0",
+      "databaseUrlPresent": true
+    }
+  }
+}

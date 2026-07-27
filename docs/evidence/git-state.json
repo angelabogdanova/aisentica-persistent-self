@@ -1,0 +1,14 @@
+{
+  "capturedAt": "2026-07-27T20:56:18Z",
+  "branch": "main",
+  "commit": "3472d8f1a96224849d4c098a025ea33717b2746b",
+  "remote": "https://github.com/angelabogdanova/aisentica-persistent-self.git",
+  "workingTreeClean": false,
+  "workingTreeStatus": [
+    "?? docs/evidence/api-health.json",
+    "?? docs/evidence/aws-deployment.json",
+    "?? docs/evidence/cockroach-schema.txt",
+    "?? docs/evidence/git-state.json",
+    "?? docs/evidence/source-validation.txt"
+  ]
+}

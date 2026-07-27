@@ -1,0 +1,235 @@
+Aisentica Persistent Self — CockroachDB Production Schema
+Captured at: 2026-07-27T20:23:52Z
+
+=== DATABASE CONNECTION ===
+persistent_self|persistent_self_app|CockroachDB CCL v26.2.1 (x86_64-pc-linux-gnu, built 2026/05/21 21:07:32, go1.25.5)
+
+=== PUBLIC TABLES ===
+ schema_name |        table_name         | type  |         owner         | estimated_row_count |              locality
+-------------+---------------------------+-------+-----------------------+---------------------+-------------------------------------
+ public      | agent_runs                | table | persistent_self_admin |                   0 | REGIONAL BY TABLE IN PRIMARY REGION
+ public      | canonical_snapshot_claims | table | persistent_self_admin |                   0 | REGIONAL BY TABLE IN PRIMARY REGION
+ public      | canonical_snapshots       | table | persistent_self_admin |                   0 | REGIONAL BY TABLE IN PRIMARY REGION
+ public      | conflict_cases            | table | persistent_self_admin |                   0 | REGIONAL BY TABLE IN PRIMARY REGION
+ public      | conflict_links            | table | persistent_self_admin |                   0 | REGIONAL BY TABLE IN PRIMARY REGION
+ public      | conflict_resolutions      | table | persistent_self_admin |                   0 | REGIONAL BY TABLE IN PRIMARY REGION
+ public      | identities                | table | persistent_self_admin |                   0 | REGIONAL BY TABLE IN PRIMARY REGION
+ public      | memory_claims             | table | persistent_self_admin |                   0 | REGIONAL BY TABLE IN PRIMARY REGION
+ public      | memory_sources            | table | persistent_self_admin |                   0 | REGIONAL BY TABLE IN PRIMARY REGION
+ public      | provenance_events         | table | persistent_self_admin |                   0 | REGIONAL BY TABLE IN PRIMARY REGION
+(10 rows)
+
+
+=== public.agent_runs ===
+    table_name     |                                                       create_statement
+-------------------+-------------------------------------------------------------------------------------------------------------------------------
+ public.agent_runs | CREATE TABLE public.agent_runs (                                                                                             +
+                   |         id UUID NOT NULL DEFAULT gen_random_uuid(),                                                                          +
+                   |         identity_id UUID NULL,                                                                                               +
+                   |         operation STRING NOT NULL,                                                                                           +
+                   |         status STRING NOT NULL,                                                                                              +
+                   |         model_provider STRING NULL,                                                                                          +
+                   |         input JSONB NOT NULL DEFAULT '{}':::JSONB,                                                                           +
+                   |         output JSONB NOT NULL DEFAULT '{}':::JSONB,                                                                          +
+                   |         error_code STRING NULL,                                                                                              +
+                   |         started_at TIMESTAMPTZ NOT NULL DEFAULT now():::TIMESTAMPTZ,                                                         +
+                   |         finished_at TIMESTAMPTZ NULL,                                                                                        +
+                   |         CONSTRAINT agent_runs_pkey PRIMARY KEY (id ASC),                                                                     +
+                   |         CONSTRAINT agent_runs_identity_id_fkey FOREIGN KEY (identity_id) REFERENCES public.identities(id) ON DELETE SET NULL,+
+                   |         INDEX agent_runs_identity_started_idx (identity_id ASC, started_at DESC),                                            +
+                   |         CONSTRAINT check_status CHECK (status IN ('started':::STRING, 'succeeded':::STRING, 'failed':::STRING))              +
+                   | ) WITH (schema_locked = true) LOCALITY REGIONAL BY TABLE IN PRIMARY REGION;
+(1 row)
+
+
+=== public.canonical_snapshot_claims ===
+            table_name            |                                                                   create_statement
+----------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------
+ public.canonical_snapshot_claims | CREATE TABLE public.canonical_snapshot_claims (                                                                                                     +
+                                  |         snapshot_id UUID NOT NULL,                                                                                                                  +
+                                  |         claim_id UUID NOT NULL,                                                                                                                     +
+                                  |         claim_order INT8 NOT NULL,                                                                                                                  +
+                                  |         CONSTRAINT canonical_snapshot_claims_pkey PRIMARY KEY (snapshot_id ASC, claim_id ASC),                                                      +
+                                  |         CONSTRAINT canonical_snapshot_claims_snapshot_id_fkey FOREIGN KEY (snapshot_id) REFERENCES public.canonical_snapshots(id) ON DELETE CASCADE,+
+                                  |         CONSTRAINT canonical_snapshot_claims_claim_id_fkey FOREIGN KEY (claim_id) REFERENCES public.memory_claims(id) ON DELETE CASCADE,            +
+                                  |         UNIQUE INDEX canonical_snapshot_claims_snapshot_id_claim_order_key (snapshot_id ASC, claim_order ASC)                                       +
+                                  | ) WITH (schema_locked = true) LOCALITY REGIONAL BY TABLE IN PRIMARY REGION;
+(1 row)
+
+
+=== public.canonical_snapshots ===
+         table_name         |                                                                         create_statement
+----------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ public.canonical_snapshots | CREATE TABLE public.canonical_snapshots (                                                                                                                        +
+                            |         id UUID NOT NULL DEFAULT gen_random_uuid(),                                                                                                              +
+                            |         identity_id UUID NOT NULL,                                                                                                                               +
+                            |         version_no INT8 NOT NULL,                                                                                                                                +
+                            |         previous_snapshot_id UUID NULL,                                                                                                                          +
+                            |         change_kind STRING NOT NULL,                                                                                                                             +
+                            |         change_summary STRING NOT NULL,                                                                                                                          +
+                            |         actor STRING NOT NULL,                                                                                                                                   +
+                            |         created_at TIMESTAMPTZ NOT NULL DEFAULT now():::TIMESTAMPTZ,                                                                                             +
+                            |         CONSTRAINT canonical_snapshots_pkey PRIMARY KEY (id ASC),                                                                                                +
+                            |         CONSTRAINT canonical_snapshots_identity_id_fkey FOREIGN KEY (identity_id) REFERENCES public.identities(id) ON DELETE CASCADE,                            +
+                            |         CONSTRAINT canonical_snapshots_previous_snapshot_id_fkey FOREIGN KEY (previous_snapshot_id) REFERENCES public.canonical_snapshots(id) ON DELETE SET NULL,+
+                            |         UNIQUE INDEX canonical_snapshots_identity_id_version_no_key (identity_id ASC, version_no ASC),                                                           +
+                            |         CONSTRAINT check_version_no CHECK (version_no >= 1:::INT8)                                                                                               +
+                            | ) WITH (schema_locked = true) LOCALITY REGIONAL BY TABLE IN PRIMARY REGION;
+(1 row)
+
+
+=== public.conflict_cases ===
+      table_name       |                                                                create_statement
+-----------------------+-------------------------------------------------------------------------------------------------------------------------------------------------
+ public.conflict_cases | CREATE TABLE public.conflict_cases (                                                                                                           +
+                       |         id UUID NOT NULL DEFAULT gen_random_uuid(),                                                                                            +
+                       |         identity_id UUID NOT NULL,                                                                                                             +
+                       |         incoming_claim_id UUID NOT NULL,                                                                                                       +
+                       |         status STRING NOT NULL,                                                                                                                +
+                       |         summary STRING NOT NULL,                                                                                                               +
+                       |         created_at TIMESTAMPTZ NOT NULL DEFAULT now():::TIMESTAMPTZ,                                                                           +
+                       |         resolved_at TIMESTAMPTZ NULL,                                                                                                          +
+                       |         CONSTRAINT conflict_cases_pkey PRIMARY KEY (id ASC),                                                                                   +
+                       |         CONSTRAINT conflict_cases_identity_id_fkey FOREIGN KEY (identity_id) REFERENCES public.identities(id) ON DELETE CASCADE,               +
+                       |         CONSTRAINT conflict_cases_incoming_claim_id_fkey FOREIGN KEY (incoming_claim_id) REFERENCES public.memory_claims(id) ON DELETE CASCADE,+
+                       |         INDEX conflict_cases_identity_status_idx (identity_id ASC, status ASC, created_at DESC),                                               +
+                       |         CONSTRAINT check_status CHECK (status IN ('open':::STRING, 'resolved':::STRING))                                                       +
+                       | ) WITH (schema_locked = true) LOCALITY REGIONAL BY TABLE IN PRIMARY REGION;
+(1 row)
+
+
+=== public.conflict_links ===
+      table_name       |                                                                                                             create_statement
+-----------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ public.conflict_links | CREATE TABLE public.conflict_links (                                                                                                                                                                                                     +
+                       |         id UUID NOT NULL DEFAULT gen_random_uuid(),                                                                                                                                                                                      +
+                       |         conflict_case_id UUID NOT NULL,                                                                                                                                                                                                  +
+                       |         existing_claim_id UUID NOT NULL,                                                                                                                                                                                                 +
+                       |         conflict_type STRING NOT NULL,                                                                                                                                                                                                   +
+                       |         similarity FLOAT8 NOT NULL,                                                                                                                                                                                                      +
+                       |         explanation STRING NOT NULL,                                                                                                                                                                                                     +
+                       |         recommended_resolution STRING NOT NULL,                                                                                                                                                                                          +
+                       |         created_at TIMESTAMPTZ NOT NULL DEFAULT now():::TIMESTAMPTZ,                                                                                                                                                                     +
+                       |         CONSTRAINT conflict_links_pkey PRIMARY KEY (id ASC),                                                                                                                                                                             +
+                       |         CONSTRAINT conflict_links_conflict_case_id_fkey FOREIGN KEY (conflict_case_id) REFERENCES public.conflict_cases(id) ON DELETE CASCADE,                                                                                           +
+                       |         CONSTRAINT conflict_links_existing_claim_id_fkey FOREIGN KEY (existing_claim_id) REFERENCES public.memory_claims(id) ON DELETE CASCADE,                                                                                          +
+                       |         UNIQUE INDEX conflict_links_conflict_case_id_existing_claim_id_key (conflict_case_id ASC, existing_claim_id ASC),                                                                                                                +
+                       |         CONSTRAINT check_conflict_type CHECK (conflict_type IN ('direct_negation':::STRING, 'identity_collision':::STRING, 'status_replacement':::STRING, 'temporal_update':::STRING, 'scope_collision':::STRING, 'uncertain':::STRING)),+
+                       |         CONSTRAINT check_recommended_resolution CHECK (recommended_resolution IN ('accept_incoming':::STRING, 'keep_existing':::STRING, 'coexist':::STRING))                                                                             +
+                       | ) WITH (schema_locked = true) LOCALITY REGIONAL BY TABLE IN PRIMARY REGION;
+(1 row)
+
+
+=== public.conflict_resolutions ===
+         table_name          |                                                                   create_statement
+-----------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------
+ public.conflict_resolutions | CREATE TABLE public.conflict_resolutions (                                                                                                          +
+                             |         id UUID NOT NULL DEFAULT gen_random_uuid(),                                                                                                 +
+                             |         conflict_case_id UUID NOT NULL,                                                                                                             +
+                             |         decision STRING NOT NULL,                                                                                                                   +
+                             |         rationale STRING NOT NULL,                                                                                                                  +
+                             |         actor STRING NOT NULL,                                                                                                                      +
+                             |         resulting_version INT8 NOT NULL,                                                                                                            +
+                             |         created_at TIMESTAMPTZ NOT NULL DEFAULT now():::TIMESTAMPTZ,                                                                                +
+                             |         CONSTRAINT conflict_resolutions_pkey PRIMARY KEY (id ASC),                                                                                  +
+                             |         CONSTRAINT conflict_resolutions_conflict_case_id_fkey FOREIGN KEY (conflict_case_id) REFERENCES public.conflict_cases(id) ON DELETE CASCADE,+
+                             |         UNIQUE INDEX conflict_resolutions_conflict_case_id_key (conflict_case_id ASC),                                                              +
+                             |         CONSTRAINT check_decision CHECK (decision IN ('accept_incoming':::STRING, 'keep_existing':::STRING, 'coexist':::STRING))                    +
+                             | ) WITH (schema_locked = true) LOCALITY REGIONAL BY TABLE IN PRIMARY REGION;
+(1 row)
+
+
+=== public.identities ===
+    table_name     |                               create_statement
+-------------------+------------------------------------------------------------------------------
+ public.identities | CREATE TABLE public.identities (                                            +
+                   |         id UUID NOT NULL DEFAULT gen_random_uuid(),                         +
+                   |         slug STRING NOT NULL,                                               +
+                   |         display_name STRING NOT NULL,                                       +
+                   |         description STRING NULL,                                            +
+                   |         current_version INT8 NOT NULL DEFAULT 1:::INT8,                     +
+                   |         created_at TIMESTAMPTZ NOT NULL DEFAULT now():::TIMESTAMPTZ,        +
+                   |         updated_at TIMESTAMPTZ NOT NULL DEFAULT now():::TIMESTAMPTZ,        +
+                   |         CONSTRAINT identities_pkey PRIMARY KEY (id ASC),                    +
+                   |         UNIQUE INDEX identities_slug_key (slug ASC),                        +
+                   |         CONSTRAINT check_current_version CHECK (current_version >= 1:::INT8)+
+                   | ) WITH (schema_locked = true) LOCALITY REGIONAL BY TABLE IN PRIMARY REGION;
+(1 row)
+
+
+=== public.memory_claims ===
+      table_name      |                                                                              create_statement
+----------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ public.memory_claims | CREATE TABLE public.memory_claims (                                                                                                                                        +
+                      |         id UUID NOT NULL DEFAULT gen_random_uuid(),                                                                                                                        +
+                      |         identity_id UUID NOT NULL,                                                                                                                                         +
+                      |         memory_type STRING NOT NULL,                                                                                                                                       +
+                      |         subject STRING NOT NULL,                                                                                                                                           +
+                      |         predicate STRING NOT NULL,                                                                                                                                         +
+                      |         object_value JSONB NOT NULL,                                                                                                                                       +
+                      |         normalized_text STRING NOT NULL,                                                                                                                                   +
+                      |         original_text STRING NOT NULL,                                                                                                                                     +
+                      |         confidence DECIMAL(5,4) NOT NULL,                                                                                                                                  +
+                      |         status STRING NOT NULL,                                                                                                                                            +
+                      |         source_id UUID NULL,                                                                                                                                               +
+                      |         supersedes_claim_id UUID NULL,                                                                                                                                     +
+                      |         embedding VECTOR(512) NULL,                                                                                                                                        +
+                      |         created_by STRING NOT NULL,                                                                                                                                        +
+                      |         created_at TIMESTAMPTZ NOT NULL DEFAULT now():::TIMESTAMPTZ,                                                                                                       +
+                      |         CONSTRAINT memory_claims_pkey PRIMARY KEY (id ASC),                                                                                                                +
+                      |         CONSTRAINT memory_claims_identity_id_fkey FOREIGN KEY (identity_id) REFERENCES public.identities(id) ON DELETE CASCADE,                                            +
+                      |         CONSTRAINT memory_claims_source_id_fkey FOREIGN KEY (source_id) REFERENCES public.memory_sources(id) ON DELETE SET NULL,                                           +
+                      |         CONSTRAINT memory_claims_supersedes_claim_id_fkey FOREIGN KEY (supersedes_claim_id) REFERENCES public.memory_claims(id) ON DELETE SET NULL,                        +
+                      |         INDEX memory_claims_identity_status_created_idx (identity_id ASC, status ASC, created_at DESC),                                                                    +
+                      |         INDEX memory_claims_subject_predicate_idx (identity_id ASC, subject ASC, predicate ASC),                                                                           +
+                      |         VECTOR INDEX memory_claim_embedding_idx (identity_id, embedding vector_cosine_ops),                                                                                +
+                      |         CONSTRAINT check_memory_type CHECK (memory_type IN ('episodic':::STRING, 'semantic':::STRING, 'canonical':::STRING, 'procedural':::STRING, 'provenance':::STRING)),+
+                      |         CONSTRAINT check_confidence_confidence CHECK ((confidence >= 0:::DECIMAL) AND (confidence <= 1:::DECIMAL)),                                                        +
+                      |         CONSTRAINT check_status CHECK (status IN ('candidate':::STRING, 'active':::STRING, 'superseded':::STRING, 'rejected':::STRING))                                    +
+                      | ) WITH (schema_locked = true) LOCALITY REGIONAL BY TABLE IN PRIMARY REGION;
+(1 row)
+
+
+=== public.memory_sources ===
+      table_name       |                                                              create_statement
+-----------------------+--------------------------------------------------------------------------------------------------------------------------------------------
+ public.memory_sources | CREATE TABLE public.memory_sources (                                                                                                      +
+                       |         id UUID NOT NULL DEFAULT gen_random_uuid(),                                                                                       +
+                       |         identity_id UUID NOT NULL,                                                                                                        +
+                       |         kind STRING NOT NULL,                                                                                                             +
+                       |         title STRING NOT NULL,                                                                                                            +
+                       |         uri STRING NULL,                                                                                                                  +
+                       |         author STRING NULL,                                                                                                               +
+                       |         content_hash STRING NULL,                                                                                                         +
+                       |         occurred_at TIMESTAMPTZ NULL,                                                                                                     +
+                       |         metadata JSONB NOT NULL DEFAULT '{}':::JSONB,                                                                                     +
+                       |         created_at TIMESTAMPTZ NOT NULL DEFAULT now():::TIMESTAMPTZ,                                                                      +
+                       |         CONSTRAINT memory_sources_pkey PRIMARY KEY (id ASC),                                                                              +
+                       |         CONSTRAINT memory_sources_identity_id_fkey FOREIGN KEY (identity_id) REFERENCES public.identities(id) ON DELETE CASCADE,          +
+                       |         INDEX memory_sources_identity_created_idx (identity_id ASC, created_at DESC),                                                     +
+                       |         CONSTRAINT check_kind CHECK (kind IN ('user':::STRING, 'document':::STRING, 'url':::STRING, 'system':::STRING, 'import':::STRING))+
+                       | ) WITH (schema_locked = true) LOCALITY REGIONAL BY TABLE IN PRIMARY REGION;
+(1 row)
+
+
+=== public.provenance_events ===
+        table_name        |                                                                  create_statement
+--------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------
+ public.provenance_events | CREATE TABLE public.provenance_events (                                                                                                           +
+                          |         id UUID NOT NULL DEFAULT gen_random_uuid(),                                                                                               +
+                          |         identity_id UUID NOT NULL,                                                                                                                +
+                          |         claim_id UUID NULL,                                                                                                                       +
+                          |         conflict_case_id UUID NULL,                                                                                                               +
+                          |         snapshot_id UUID NULL,                                                                                                                    +
+                          |         event_type STRING NOT NULL,                                                                                                               +
+                          |         actor STRING NOT NULL,                                                                                                                    +
+                          |         details JSONB NOT NULL DEFAULT '{}':::JSONB,                                                                                              +
+                          |         created_at TIMESTAMPTZ NOT NULL DEFAULT now():::TIMESTAMPTZ,                                                                              +
+                          |         CONSTRAINT provenance_events_pkey PRIMARY KEY (id ASC),                                                                                   +
+                          |         CONSTRAINT provenance_events_identity_id_fkey FOREIGN KEY (identity_id) REFERENCES public.identities(id) ON DELETE CASCADE,               +
+                          |         CONSTRAINT provenance_events_claim_id_fkey FOREIGN KEY (claim_id) REFERENCES public.memory_claims(id) ON DELETE SET NULL,                 +
+                          |         CONSTRAINT provenance_events_conflict_case_id_fkey FOREIGN KEY (conflict_case_id) REFERENCES public.conflict_cases(id) ON DELETE SET NULL,+
+                          |         CONSTRAINT provenance_events_snapshot_id_fkey FOREIGN KEY (snapshot_id) REFERENCES public.canonical_snapshots(id) ON DELETE SET NULL,     +
+                          |         INDEX provenance_events_identity_created_idx (identity_id ASC, created_at ASC, id ASC)                                                    +
+                          | ) WITH (schema_locked = true) LOCALITY REGIONAL BY TABLE IN PRIMARY REGION;
+(1 row)

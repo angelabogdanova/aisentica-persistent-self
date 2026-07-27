@@ -1,0 +1,10 @@
+{
+  "fetchedAt": "2026-07-27T19:30:52Z",
+  "endpoint": "https://8457okzg1b.execute-api.us-east-1.amazonaws.com/health",
+  "httpStatus": 200,
+  "response": {
+    "status": "ok",
+    "database": "CockroachDB CCL v26.2.1 (x86_64-pc-linux-gnu, built 2026/05/21 21:07:32, go1.25.5)",
+    "modelProvider": "amazon-bedrock-with-deterministic-fallback"
+  }
+}
