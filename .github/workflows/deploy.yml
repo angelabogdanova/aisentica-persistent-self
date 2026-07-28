@@ -77,7 +77,7 @@ jobs:
             --no-fail-on-empty-changeset \
             --parameter-overrides \
               "DatabaseUrl=$DATABASE_URL" \
-              "AllowedOrigin=*" \
+              "AllowedOrigin=https://d31np75gupnbhy.cloudfront.net" \
               "ModelMode=$MODEL_MODE" \
               "RuntimePermissionsBoundaryArn=$RUNTIME_PERMISSIONS_BOUNDARY_ARN"
 

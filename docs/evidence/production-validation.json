@@ -1,0 +1,235 @@
+{
+  "schemaVersion": "1.0",
+  "title": "Aisentica Persistent Self Production Validation",
+  "generatedAt": "2026-07-28T12:04:38.972125+00:00",
+  "environment": {
+    "apiBaseUrl": "https://8457okzg1b.execute-api.us-east-1.amazonaws.com",
+    "cloudFrontOrigin": "https://d31np75gupnbhy.cloudfront.net",
+    "awsRegion": "us-east-1",
+    "sourceCommitAtValidation": "f6a20f0100d9b9ca88adbf21f834bead2a4dfeb0",
+    "modelMode": "hybrid"
+  },
+  "summary": {
+    "passed": 15,
+    "failed": 0,
+    "pending": 2
+  },
+  "tests": [
+    {
+      "name": "Unknown identity returns HTTP 404",
+      "status": "passed",
+      "evidence": {
+        "httpStatus": 404,
+        "response": {
+          "error": "Identity not found"
+        }
+      }
+    },
+    {
+      "name": "Malformed identity request returns HTTP 400",
+      "status": "passed",
+      "evidence": {
+        "httpStatus": 400,
+        "response": {
+          "error": "Validation failed",
+          "issues": [
+            {
+              "code": "too_small",
+              "minimum": 2,
+              "type": "string",
+              "inclusive": true,
+              "exact": false,
+              "message": "String must contain at least 2 character(s)",
+              "path": [
+                "displayName"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Accept Incoming identity begins at Canonical Version 1",
+      "status": "passed",
+      "evidence": {
+        "identityId": "21bb10d1-e2c4-4030-926e-29f03937472d",
+        "currentVersion": 1
+      }
+    },
+    {
+      "name": "Baseline claim commits as active Canonical Version 2",
+      "status": "passed",
+      "evidence": {
+        "recordedHttpStatus": 201,
+        "outcome": "committed",
+        "claimStatus": "active",
+        "version": 2
+      }
+    },
+    {
+      "name": "Direct negation opens an isolated candidate conflict",
+      "status": "passed",
+      "evidence": {
+        "recordedHttpStatus": 202,
+        "conflictId": "6f2925e0-4f66-4782-9674-8e493390134f",
+        "incomingStatus": "candidate",
+        "conflictStatus": "open",
+        "conflictType": "direct_negation"
+      }
+    },
+    {
+      "name": "Candidate is excluded from Current Canon before resolution",
+      "status": "passed",
+      "evidence": {
+        "version": 2,
+        "identityCurrentVersion": 2,
+        "claimCount": 1,
+        "claimStatuses": [
+          "active"
+        ]
+      }
+    },
+    {
+      "name": "Accept Incoming activates candidate and supersedes established claim",
+      "status": "passed",
+      "evidence": {
+        "recordedHttpStatus": 200,
+        "conflictStatus": "resolved",
+        "incomingStatus": "active",
+        "establishedStatus": "superseded",
+        "decision": "accept_incoming",
+        "resultingVersion": 3
+      }
+    },
+    {
+      "name": "Current Canon contains only accepted incoming claim at Version 3",
+      "status": "passed",
+      "evidence": {
+        "version": 3,
+        "claimCount": 1,
+        "claims": [
+          {
+            "status": "active",
+            "normalizedText": "Production Validation Accept Incoming is not active."
+          }
+        ]
+      }
+    },
+    {
+      "name": "Repeated resolution is rejected and creates no Canonical Version 4",
+      "status": "passed",
+      "evidence": {
+        "recordedReplayHttpStatus": 409,
+        "replayResponse": {
+          "error": "Conflict case is already resolved"
+        },
+        "liveContextHttpStatus": 200,
+        "liveVersion": 3,
+        "liveClaimCount": 1
+      }
+    },
+    {
+      "name": "Coexist identity begins at Canonical Version 1",
+      "status": "passed",
+      "evidence": {
+        "identityId": "7e4b1689-c98c-4464-b501-c51428f4c84a",
+        "currentVersion": 1
+      }
+    },
+    {
+      "name": "Scoped incoming claim opens a production conflict",
+      "status": "passed",
+      "evidence": {
+        "recordedHttpStatus": 202,
+        "conflictId": "310cf79d-dce8-4385-bbdb-3f81c95fd34c",
+        "incomingStatus": "candidate",
+        "conflictStatus": "open",
+        "conflictType": "status_replacement"
+      }
+    },
+    {
+      "name": "Coexist resolution keeps both scoped claims active at Version 3",
+      "status": "passed",
+      "evidence": {
+        "recordedResolutionHttpStatus": 200,
+        "decision": "coexist",
+        "resultingVersion": 3,
+        "liveContextHttpStatus": 200,
+        "liveClaimCount": 2,
+        "liveClaimStatuses": [
+          "active",
+          "active"
+        ]
+      }
+    },
+    {
+      "name": "Provenance preserves the complete Coexist decision path",
+      "status": "passed",
+      "evidence": {
+        "eventCount": 4,
+        "eventTypes": [
+          "IDENTITY_CREATED",
+          "CLAIM_COMMITTED",
+          "CONFLICT_OPENED",
+          "CONFLICT_RESOLVED"
+        ],
+        "decision": "coexist",
+        "rationale": "The claims describe different geographic scopes: Europe and Asia. Both remain simultaneously authoritative within their respective scopes.",
+        "actor": "validation-runner"
+      }
+    },
+    {
+      "name": "Export manifest contains Canonical Version 3, two claims, and four events",
+      "status": "passed",
+      "evidence": {
+        "recordedHttpStatus": 201,
+        "stored": true,
+        "schemaVersion": "1.0",
+        "identityId": "7e4b1689-c98c-4464-b501-c51428f4c84a",
+        "version": 3,
+        "claimCount": 2,
+        "eventCount": 4,
+        "objectKey": "exports/7e4b1689-c98c-4464-b501-c51428f4c84a/v3-1785239395598.json"
+      }
+    },
+    {
+      "name": "Export object exists in private encrypted S3 storage",
+      "status": "passed",
+      "evidence": {
+        "contentLength": 4467,
+        "contentType": "application/json",
+        "serverSideEncryption": "AES256",
+        "metadata": {
+          "version": "3",
+          "schema": "1.0",
+          "identity": "7e4b1689-c98c-4464-b501-c51428f4c84a"
+        }
+      }
+    }
+  ],
+  "pendingHardening": [
+    {
+      "name": "Restrict CORS to the production CloudFront origin",
+      "targetOrigin": "https://d31np75gupnbhy.cloudfront.net",
+      "localTemplateValidated": true,
+      "productionDeployPending": true
+    },
+    {
+      "name": "Extend export retention through and beyond judging",
+      "observedExpirationDays": 30,
+      "targetExpirationDays": 180,
+      "localTemplateValidated": true,
+      "productionDeployPending": true
+    }
+  ],
+  "validationIdentities": {
+    "acceptIncoming": {
+      "identityId": "21bb10d1-e2c4-4030-926e-29f03937472d",
+      "conflictId": "6f2925e0-4f66-4782-9674-8e493390134f"
+    },
+    "coexist": {
+      "identityId": "7e4b1689-c98c-4464-b501-c51428f4c84a",
+      "conflictId": "310cf79d-dce8-4385-bbdb-3f81c95fd34c"
+    }
+  }
+}
