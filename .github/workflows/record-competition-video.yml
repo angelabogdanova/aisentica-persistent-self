@@ -1,3 +1,4 @@
+# Revision 2: status-observed autonomous production run.
 name: Record Competition Video
 
 on:
@@ -289,4 +290,5 @@ jobs:
           fi
 
           git commit -m 'video: generate final competition demonstration'
+          git pull --rebase origin main
           git push origin HEAD:main
