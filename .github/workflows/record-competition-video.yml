@@ -1,4 +1,4 @@
-# Revision 2: status-observed autonomous production run.
+# Revision 3: final duration fixed at 2 minutes 55 seconds.
 name: Record Competition Video
 
 on:
@@ -17,6 +17,8 @@ concurrency:
 env:
   APP_URL: https://d31np75gupnbhy.cloudfront.net
   VOICEOVER_URL: https://www.aidocmaker.com/g0/audio?name=17f2bf7556074471978e8edfa7cddae4
+  FINAL_DURATION_SECONDS: '175.0'
+  NARRATION_DURATION_SECONDS: '172.4'
 
 jobs:
   record-and-build:
@@ -101,9 +103,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          AUDIO_DURATION=$(ffprobe -v error -show_entries format=duration \
-            -of default=noprint_wrappers=1:nokey=1 video-output/voiceover.mp3)
-          export AUDIO_DURATION
+          export SUBTITLE_DURATION="$NARRATION_DURATION_SECONDS"
 
           python3 - <<'PY'
           import json
@@ -111,7 +111,7 @@ jobs:
           import re
           from pathlib import Path
 
-          duration = float(os.environ['AUDIO_DURATION'])
+          duration = float(os.environ['SUBTITLE_DURATION'])
           segments = json.loads(Path('video/voiceover-segments.json').read_text(encoding='utf-8'))
 
           cues = []
@@ -162,12 +162,13 @@ jobs:
           VIDEO_DURATION=$(ffprobe -v error -show_entries format=duration \
             -of default=noprint_wrappers=1:nokey=1 video-output/silent-master.mp4)
 
-          read -r TARGET_DURATION STRETCH_FACTOR <<EOF
+          read -r VIDEO_STRETCH AUDIO_SPEED <<EOF
           $(python3 - <<PY
           audio = float('$AUDIO_DURATION')
           video = float('$VIDEO_DURATION')
-          target = audio + 2.2
-          print(f'{target:.6f} {target / video:.9f}')
+          final_duration = float('$FINAL_DURATION_SECONDS')
+          narration_duration = float('$NARRATION_DURATION_SECONDS')
+          print(f'{final_duration / video:.9f} {audio / narration_duration:.9f}')
           PY
           )
           EOF
@@ -175,9 +176,9 @@ jobs:
           ffmpeg -y \
             -i video-output/silent-master.mp4 \
             -i video-output/voiceover.mp3 \
-            -filter_complex "[0:v]setpts=${STRETCH_FACTOR}*PTS,subtitles=video-output/subtitles.srt:force_style='FontName=DejaVu Sans,FontSize=22,PrimaryColour=&H00FFFFFF,OutlineColour=&HAA000000,BorderStyle=1,Outline=2,Shadow=1,MarginV=44'[v];[1:a]loudnorm=I=-16:TP=-1.5:LRA=8,apad=pad_dur=3[a]" \
+            -filter_complex "[0:v]setpts=${VIDEO_STRETCH}*PTS,subtitles=video-output/subtitles.srt:force_style='FontName=DejaVu Sans,FontSize=22,PrimaryColour=&H00FFFFFF,OutlineColour=&HAA000000,BorderStyle=1,Outline=2,Shadow=1,MarginV=44'[v];[1:a]atempo=${AUDIO_SPEED},loudnorm=I=-16:TP=-1.5:LRA=8,apad=pad_dur=4[a]" \
             -map '[v]' -map '[a]' \
-            -t "$TARGET_DURATION" \
+            -t "$FINAL_DURATION_SECONDS" \
             -c:v libx264 -preset slow -crf 19 -pix_fmt yuv420p -r 30 \
             -c:a aac -b:a 192k -movflags +faststart \
             video-output/aisentica-persistent-self-demo.mp4
@@ -205,8 +206,8 @@ jobs:
           video_streams = [s for s in probe['streams'] if s['codec_type'] == 'video']
           audio_streams = [s for s in probe['streams'] if s['codec_type'] == 'audio']
 
-          if duration >= 180:
-              raise SystemExit(f'Video exceeds the three-minute limit: {duration:.3f}s')
+          if not 174.0 <= duration < 180.0:
+              raise SystemExit(f'Unexpected final duration: {duration:.3f}s')
           if not video_streams or not audio_streams:
               raise SystemExit('Final MP4 must contain both video and audio streams.')
 
