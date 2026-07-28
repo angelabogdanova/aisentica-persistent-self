@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0",
   "title": "Aisentica Persistent Self Production Validation",
-  "generatedAt": "2026-07-28T12:04:38.972125+00:00",
+  "generatedAt": "2026-07-28T12:45:06.320008+00:00",
   "environment": {
     "apiBaseUrl": "https://8457okzg1b.execute-api.us-east-1.amazonaws.com",
     "cloudFrontOrigin": "https://d31np75gupnbhy.cloudfront.net",
@@ -10,9 +10,9 @@
     "modelMode": "hybrid"
   },
   "summary": {
-    "passed": 15,
+    "passed": 18,
     "failed": 0,
-    "pending": 2
+    "pending": 0
   },
   "tests": [
     {
@@ -205,21 +205,74 @@
           "identity": "7e4b1689-c98c-4464-b501-c51428f4c84a"
         }
       }
+    },
+    {
+      "name": "CORS permits the production CloudFront origin and withholds authorization from an unrelated origin",
+      "status": "passed",
+      "evidence": {
+        "allowedOrigin": {
+          "origin": "https://d31np75gupnbhy.cloudfront.net",
+          "httpStatus": 204,
+          "allowOrigin": "https://d31np75gupnbhy.cloudfront.net",
+          "allowMethods": "GET,OPTIONS,POST",
+          "allowHeaders": "content-type"
+        },
+        "unauthorizedOrigin": {
+          "origin": "https://unauthorized.example",
+          "httpStatus": 204,
+          "allowOrigin": null,
+          "allowMethods": null,
+          "allowHeaders": null
+        }
+      }
+    },
+    {
+      "name": "Export retention remains enabled for 180 days through and beyond judging",
+      "status": "passed",
+      "evidence": {
+        "bucket": "aisentica-persistent-self-exportbucket-4ffjcs3w2bnc",
+        "ruleId": "ExpireDemoExports",
+        "ruleStatus": "Enabled",
+        "expirationDays": 180
+      }
+    },
+    {
+      "name": "Post-deploy API and CloudFront smoke test succeeds",
+      "status": "passed",
+      "evidence": {
+        "api": {
+          "url": "https://8457okzg1b.execute-api.us-east-1.amazonaws.com/health",
+          "httpStatus": 200,
+          "response": {
+            "status": "ok",
+            "database": "CockroachDB CCL v26.2.1 (x86_64-pc-linux-gnu, built 2026/05/21 21:07:32, go1.25.5)",
+            "modelProvider": "amazon-bedrock-with-deterministic-fallback"
+          }
+        },
+        "frontend": {
+          "url": "https://d31np75gupnbhy.cloudfront.net/",
+          "httpStatus": 200,
+          "contentType": "text/html",
+          "title": "Aisentica Persistent Self"
+        }
+      }
     }
   ],
   "pendingHardening": [
     {
       "name": "Restrict CORS to the production CloudFront origin",
+      "status": "passed",
       "targetOrigin": "https://d31np75gupnbhy.cloudfront.net",
-      "localTemplateValidated": true,
-      "productionDeployPending": true
+      "productionDeployPending": false,
+      "verifiedAt": "2026-07-28T12:45:06.320008+00:00"
     },
     {
       "name": "Extend export retention through and beyond judging",
-      "observedExpirationDays": 30,
+      "status": "passed",
+      "observedExpirationDays": 180,
       "targetExpirationDays": 180,
-      "localTemplateValidated": true,
-      "productionDeployPending": true
+      "productionDeployPending": false,
+      "verifiedAt": "2026-07-28T12:45:06.320008+00:00"
     }
   ],
   "validationIdentities": {
@@ -231,5 +284,12 @@
       "identityId": "7e4b1689-c98c-4464-b501-c51428f4c84a",
       "conflictId": "310cf79d-dce8-4385-bbdb-3f81c95fd34c"
     }
+  },
+  "deploymentEvidence": {
+    "commit": "9bbc155",
+    "workflowRunId": 30358532880,
+    "workflowConclusion": "success",
+    "modelMode": "hybrid",
+    "verifiedAt": "2026-07-28T12:45:06.320008+00:00"
   }
 }
