@@ -63,7 +63,7 @@ COCKROACH_DATABASE_URL = TLS PostgreSQL connection string
 
 Open GitHub Actions → Deploy to AWS → Run workflow.
 
-Select `hybrid` for the initial deployment.
+Select `hybrid` for the production deployment.
 
 The workflow:
 
@@ -77,39 +77,87 @@ The workflow:
 8. uploads the frontend to S3;
 9. invalidates CloudFront.
 
-## 6. Narrow CORS
+## 6. Production CORS
 
-Read the `WebsiteUrl` stack output. Re-run deployment with `AllowedOrigin` set to that URL in the workflow or deploy command.
+The production workflow passes the exact CloudFront origin as `AllowedOrigin`:
 
-The competition baseline defaults to `*` only because the CloudFront URL does not exist before the first stack deployment.
+```text
+https://d31np75gupnbhy.cloudfront.net
+```
 
-## 7. Configure Managed MCP
+Production validation confirms that the browser API authorizes this origin and withholds CORS authorization from unrelated origins.
 
-1. Create a CockroachDB Cloud API key restricted to the competition cluster.
-2. Connect the official Managed MCP endpoint.
-3. Run `mcp/memory-auditor-prompt.md`.
-4. Save the resulting audit JSON under `docs/evidence/` before submission.
+For a new environment, deploy the stack once to obtain the `WebsiteUrl` output, set `AllowedOrigin` to that URL, and run the deployment workflow again. The competition production environment has already completed this hardening step.
+
+## 7. Managed MCP production audit
+
+The official CockroachDB Cloud Managed MCP Server was connected to the competition cluster and used for a strictly read-only production audit.
+
+Audit path:
+
+```text
+AWS CloudShell → Codex CLI → CockroachDB Cloud Managed MCP
+```
+
+The auditor used SHOW-backed schema inspection, SELECT and EXPLAIN operations. It performed no insert, update, delete, alter or database-creation operations.
+
+Result:
+
+```text
+16 passed
+2 warnings
+0 failed
+```
+
+Committed sanitized evidence:
+
+```text
+docs/evidence/managed-mcp-audit.json
+```
+
+To reproduce the audit:
+
+1. create a CockroachDB Cloud API key restricted to the competition cluster;
+2. connect the official Managed MCP endpoint;
+3. run `mcp/memory-auditor-prompt.md` in strictly read-only mode;
+4. sanitize the result before preserving it under `docs/evidence/`.
 
 ## 8. Production verification
 
-Run the judge path in `docs/judge-flow.md` from a clean browser profile.
+Production validation is complete:
 
-Capture:
+```text
+18 passed
+0 failed
+0 pending
+```
 
-- CloudFront URL;
-- API health output;
-- CockroachDB table and vector-index evidence;
-- one committed claim;
-- one open conflict;
-- one resolution;
-- canonical version increment;
+The committed verification package includes CockroachDB schema and vector evidence, factual EXPLAIN output, direct Amazon Nova 2 Lite and Titan Text Embeddings V2 runtime evidence, CORS verification, 180-day export retention, provenance-export verification and post-deployment smoke tests.
+
+Evidence:
+
+- `docs/evidence/production-validation.json`;
+- `docs/evidence/bedrock-runtime-evidence.json`;
+- `docs/evidence/cockroach-schema.txt`;
+- `docs/evidence/managed-mcp-audit.json`;
+- `docs/evidence/SHA256SUMS`.
+
+Before recording the final video, run the judge path in `docs/judge-flow.md` from a clean browser profile or incognito window.
+
+Capture the definitive visual set:
+
+- CloudFront application and online status;
+- one committed baseline claim and Canonical Version 2;
+- one open conflict with the incoming candidate isolated from Current Canon;
+- one Keep established resolution and Canonical Version 3;
 - provenance timeline;
-- S3 export result;
-- MCP audit.
+- encrypted S3 manifest export result;
+- CockroachDB table, VECTOR and index evidence;
+- Managed MCP audit result;
+- final architecture image.
 
 ## 9. Cost guardrails
 
-- keep Lambda reserved concurrency at 5;
 - keep API Gateway throttling active;
 - use `hybrid` mode;
 - use a single CockroachDB Basic cluster;
