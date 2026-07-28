@@ -38,7 +38,7 @@ Current verified production state:
 - strictly read-only Memory Auditor completed against the production database;
 - sanitized audit JSON committed with 16 passed, 2 warnings and 0 failed checks.
 
-The remaining work is the final standalone evidence package, production negative tests, CORS hardening, screenshots, video and Devpost submission.
+The production evidence package is complete: 18 production checks passed with 0 failures and 0 pending items, CORS is restricted to the production CloudFront origin, export retention is 180 days and direct live Amazon Bedrock runtime evidence is committed. Remaining work is limited to final visuals, clean-browser verification, video and Devpost submission.
 
 ## Core demonstration
 
@@ -410,7 +410,7 @@ The deployed stack creates:
 
 - one Lambda function;
 - one HTTP API with rate and burst throttling;
-- one encrypted S3 provenance export bucket with 30-day expiry;
+- one encrypted S3 provenance export bucket with 180-day expiry;
 - one private S3 frontend bucket;
 - one CloudFront distribution with Origin Access Control;
 - IAM permissions for Bedrock, S3 and X-Ray.
@@ -463,15 +463,18 @@ See:
 - `docs/devpost-submission-draft.md`
 - `docs/evidence/main-demo-scenario.json`
 - `docs/evidence/managed-mcp-audit.json`
+- `docs/evidence/production-validation.json`
+- `docs/evidence/bedrock-runtime-evidence.json`
+- `docs/evidence/SHA256SUMS`
 
 ## Remaining submission work
 
-- collect standalone SQL, vector-index, Bedrock and AWS evidence;
-- finish production negative and mutation tests;
-- restrict browser CORS to the CloudFront origin;
-- update screenshots, architecture image and remaining evidence files;
-- record the public video below three minutes;
-- complete and submit Devpost.
+- create the final architecture image;
+- capture the final application, Version 3, provenance, export and Managed MCP screenshots;
+- run the complete judge flow from a clean browser;
+- record and publish the video below three minutes;
+- finalize and submit the Devpost entry;
+- preserve submission confirmation and remove temporary credentials after submission.
 
 ## License
 

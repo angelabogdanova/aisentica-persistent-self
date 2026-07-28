@@ -1,6 +1,6 @@
 # Devpost Submission Draft
 
-Status: working draft. Managed MCP evidence is complete; final evidence, video and submission remain pending.
+Status: submission-ready technical draft. Production validation, hardening, Managed MCP evidence and direct Amazon Bedrock runtime evidence are complete. Final visuals, video, clean-browser verification and submission remain.
 
 ## Project title
 
@@ -114,6 +114,8 @@ The production application runs on AWS:
 
 The production deployment uses hybrid model mode: Bedrock is preferred, while deterministic fallback protects the live demonstration from temporary model-service interruption.
 
+Direct live AWS Bedrock Runtime probes used the region and model identifiers read from the deployed production Lambda configuration. Amazon Nova 2 Lite returned HTTP 200 and echoed a unique verification marker. Amazon Titan Text Embeddings V2 returned HTTP 200 with 512 finite embedding values. Sanitized request IDs and verification data are preserved in `docs/evidence/bedrock-runtime-evidence.json`.
+
 ## CockroachDB tools used
 
 ### Distributed Vector Indexing
@@ -186,7 +188,13 @@ A fourth challenge was creating independent infrastructure evidence without givi
 - configured short-lived GitHub OIDC deployment;
 - completed a live end-to-end conflict demonstration;
 - connected the official CockroachDB Cloud Managed MCP Server;
-- completed and preserved a sanitized read-only production audit.
+- completed and preserved a sanitized read-only production audit;
+- completed 18 production validation checks with 0 failures and 0 pending items;
+- verified Accept incoming, coexist, candidate isolation and replay protection in production;
+- restricted browser CORS to the production CloudFront origin;
+- extended encrypted provenance-export retention to 180 days;
+- completed direct live Amazon Nova 2 Lite and Titan Text Embeddings V2 runtime probes;
+- committed an eleven-file SHA256-verifiable evidence package.
 
 ## What we learned
 
@@ -202,13 +210,13 @@ The audit also demonstrated an important principle: evidence is stronger when it
 
 Before final submission:
 
-- capture standalone SQL, vector-index and Bedrock evidence;
-- complete the remaining negative and mutation tests;
-- restrict browser CORS to the CloudFront origin;
-- complete screenshots and the architecture image;
-- record the final video below three minutes;
-- verify all links and evidence from a clean browser;
-- submit the final Devpost entry.
+- create the final architecture image;
+- capture the final product, Version 3, provenance, export and Managed MCP screenshots;
+- run the complete judge flow from a clean browser;
+- record and publish the final video below three minutes;
+- verify the demo, repository, video and evidence links in incognito;
+- complete and submit the final Devpost entry;
+- preserve submission confirmation.
 
 After the hackathon, the project can become a persistence layer for long-lived research identities, institutional agents, policy-bearing assistants, knowledge curators and multi-agent systems that require governed memory and auditability.
 

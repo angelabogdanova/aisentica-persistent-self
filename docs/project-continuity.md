@@ -14,7 +14,7 @@ Claim → Source → Conflict → Resolution → Canon
 
 ## Current phase
 
-Production deployment is complete. The project is now in evidence, Managed MCP, testing, video and Devpost preparation.
+Production deployment, production validation, hardening, Managed MCP audit, CockroachDB evidence and direct Amazon Bedrock runtime evidence are complete. The project is now in final submission preparation: architecture image, screenshots, clean-browser judge rehearsal, video publication and Devpost submission.
 
 ## Public deployment
 
@@ -56,7 +56,7 @@ https://8457okzg1b.execute-api.us-east-1.amazonaws.com/health
 - encrypted S3 provenance export;
 - CloudWatch and X-Ray configuration.
 
-## Completed production verification
+## Verified production behavior
 
 The following behavior has been verified against the live AWS and CockroachDB deployment:
 
@@ -127,9 +127,9 @@ This scenario must remain identical in:
 Updated:
 
 - `README.md` reflects the live production deployment;
-- Managed MCP is described as prepared and pending rather than complete;
+- Managed MCP is documented as completed with a committed sanitized production audit;
 - Lambda reserved concurrency is no longer claimed;
-- `frontend/index.html` identifies the final MCP audit as pending;
+- `frontend/index.html` presents the completed Managed MCP audit result;
 - `frontend/demo-scenario.js` loads the unified baseline and contradiction;
 - `docs/judge-flow.md` uses one primary scenario;
 - `docs/video-script.md` uses the same scenario;
@@ -137,78 +137,103 @@ Updated:
 - `docs/devpost-submission-draft.md` uses the same narrative;
 - `docs/evidence/main-demo-scenario.json` defines the canonical evidence contract;
 - `docs/competition-record.md` records production completion and remaining work;
-- `docs/mcp-memory-auditor.md` clearly marks the live audit as pending.
+- `docs/mcp-memory-auditor.md` documents the completed live read-only production audit.
 
-## Pending critical work
+## Completed production verification
 
 ### Managed MCP
 
-- connect the official CockroachDB Cloud Managed MCP Server;
-- restrict the credential to the competition cluster;
-- run the read-only Memory Auditor;
-- verify schema, vector index, claim states, conflict links, resolution, snapshots and provenance;
-- save sanitized `docs/evidence/managed-mcp-audit.json`.
+- connected the official CockroachDB Cloud Managed MCP Server;
+- restricted the credential to the competition cluster;
+- completed the read-only Memory Auditor inspection;
+- verified schema, VECTOR storage, vector index, claim states, conflict links, resolutions, snapshots and provenance;
+- preserved the sanitized audit in `docs/evidence/managed-mcp-audit.json`.
 
 ### Vector and model evidence
 
-- capture `SHOW COLUMNS FROM memory_claims`;
-- capture `SHOW INDEX FROM memory_claims`;
-- capture `EXPLAIN` for semantic retrieval;
-- verify vector-index eligibility;
-- capture one production `agent_runs` record or equivalent Bedrock execution evidence;
-- confirm one 512-dimensional embedding in the production path.
+- verified `embedding VECTOR(512)`;
+- verified `memory_claim_embedding_idx`;
+- verified `vector_cosine_ops`;
+- preserved the factual CockroachDB execution plan for the tested semantic query;
+- completed a direct live Amazon Nova 2 Lite invocation with HTTP 200;
+- verified a unique response marker from Nova;
+- completed a direct live Amazon Titan Text Embeddings V2 invocation with HTTP 200;
+- verified 512 finite embedding dimensions;
+- preserved sanitized runtime evidence in `docs/evidence/bedrock-runtime-evidence.json`.
 
 ### Production tests
 
-- test Accept incoming;
-- verify superseded history;
-- test Keep both;
-- test malformed request → HTTP 400;
-- test unknown identity → HTTP 404;
-- test repeated resolution → HTTP 409;
-- test idempotency and one-version increment;
-- verify export object in private S3.
+- verified Accept incoming on an isolated production identity;
+- verified coexist on a separate production identity;
+- verified superseded history;
+- verified Keep established and Canonical Version 3;
+- verified candidate isolation;
+- verified malformed request returning HTTP 400;
+- verified unknown identity returning HTTP 404;
+- verified repeated conflict resolution returning HTTP 409;
+- verified replay protection and one-version increment;
+- verified provenance export and the encrypted S3 object;
+- completed 18 production checks with 0 failures and 0 pending items.
 
-### Hardening
+### Production hardening
 
-- replace browser CORS `*` with the exact CloudFront origin;
-- re-run CI and deployment;
-- verify the application from a clean browser after CloudFront invalidation.
+- restricted browser CORS to the exact production CloudFront origin;
+- withheld CORS authorization from an unrelated origin;
+- extended export retention from 30 to 180 days;
+- completed deployment through GitHub Actions;
+- completed post-deployment API and CloudFront smoke tests;
+- verified the public application after CloudFront invalidation.
 
-### Submission package
+### Evidence package
 
-- collect sanitized evidence files;
-- create the architecture image;
-- produce the final testing report;
-- complete Managed MCP evidence;
-- record and edit the video below three minutes;
-- finalize Devpost fields;
-- verify every public link in incognito;
-- perform final Submit.
+- committed eleven sanitized evidence artifacts;
+- updated `docs/evidence/SHA256SUMS`;
+- verified every committed evidence artifact successfully;
+- confirmed that the evidence package contains no passwords, access keys, database URLs, private tokens or private account identifiers.
+
+## Remaining submission work
+
+- create the final architecture image;
+- capture the final application, Canonical Version 3, provenance, export and Managed MCP screenshots;
+- run the complete judge flow from a clean browser or incognito window;
+- record and publish the final video below three minutes;
+- verify the application, repository, video and evidence links in incognito;
+- finalize and submit the Devpost entry;
+- preserve the submission confirmation;
+- remove temporary credentials after submission.
 
 ## Immediate next action
 
-Complete the Managed MCP Memory Auditor connection and produce the first sanitized audit JSON.
+Create the final architecture image, then capture the definitive screenshot set from the production application and committed evidence package.
 
-Do not record the final video before this step. The video script reserves a specific segment for the live MCP audit and must show real evidence rather than a placeholder.
+Do not alter the production memory engine, infrastructure or completed evidence unless a verified defect is found. The engineering baseline is complete and stable.
 
 ## Definition of Done
 
 The submission is complete when all conditions are simultaneously true:
 
-- CI green;
-- deployment workflow green;
-- CloudFormation stable;
-- CloudFront public application online;
-- API health successful;
-- CockroachDB persistence and fresh-session restoration verified;
-- vector index verified by SQL and `EXPLAIN` evidence;
-- direct-negation conflict lifecycle verified;
-- Accept incoming and negative tests verified;
-- provenance and manifest evidence saved;
-- Managed MCP audit complete;
-- evidence package contains no secrets;
-- video public and below the competition limit;
-- Devpost complete;
-- all links tested from a clean browser;
-- final submission confirmed.
+- CI is green;
+- the deployment workflow is green;
+- CloudFormation is stable;
+- the CloudFront application is online;
+- the API health endpoint returns HTTP 200;
+- CockroachDB persistence and fresh-session restoration are verified;
+- Canonical Version 3 and the complete conflict lifecycle are verified;
+- Accept incoming and coexist are verified;
+- provenance and encrypted manifest export are verified;
+- export retention is 180 days;
+- browser CORS is restricted to the production CloudFront origin;
+- SQL, VECTOR, index and factual EXPLAIN evidence are committed;
+- the Managed MCP audit is complete;
+- direct Amazon Nova 2 Lite and Titan Text Embeddings V2 runtime evidence is committed;
+- production validation reports 18 passed, 0 failed and 0 pending;
+- all eleven evidence artifacts pass SHA256 verification;
+- the evidence package contains no secrets;
+- the final architecture image is complete;
+- the final screenshot set is complete;
+- the complete judge flow passes from a clean browser;
+- the video is public and below the competition limit;
+- the Devpost entry is complete;
+- every public link is verified in incognito;
+- final submission confirmation is preserved;
+- temporary credentials used during preparation are removed.

@@ -22,6 +22,23 @@ database: CockroachDB version string
 modelProvider: amazon-bedrock-with-deterministic-fallback
 ```
 
+## Verified production status
+
+The deployed production system has completed its engineering validation.
+
+Result: 18 passed, 0 failed, 0 pending.
+
+Verified controls include candidate isolation, Accept incoming, coexist, replay protection, HTTP 400/404/409 responses, provenance export, production-origin CORS, 180-day export retention and post-deployment smoke tests.
+
+Direct live Amazon Bedrock Runtime evidence confirms successful HTTP 200 invocations of Amazon Nova 2 Lite and Amazon Titan Text Embeddings V2. Titan returned 512 finite embedding dimensions.
+
+Evidence:
+
+- `docs/evidence/production-validation.json`
+- `docs/evidence/bedrock-runtime-evidence.json`
+- `docs/evidence/managed-mcp-audit.json`
+- `docs/evidence/SHA256SUMS`
+
 ## Primary judge test
 
 Use a clean browser profile or incognito window.
@@ -211,37 +228,23 @@ Both claims become active in the new snapshot.
 The resolution and rationale remain in provenance.
 ```
 
-## CockroachDB evidence checks
+## Completed CockroachDB evidence checks
 
-The final evidence package should include sanitized standalone output for:
+The production evidence package confirms:
 
-```sql
-SHOW COLUMNS FROM memory_claims;
-```
+- `embedding VECTOR(512)`;
+- `memory_claim_embedding_idx`;
+- `vector_cosine_ops`;
+- the `identity_id` index prefix;
+- the factual execution plan selected for the tested identity-scoped semantic query.
 
-Expected evidence:
+The completed Managed MCP audit verified the vector-index definition. For the audited two-claim data set, CockroachDB selected `memory_claims_subject_predicate_idx`, an index join to the primary key and top-k sorting. The evidence preserves this actual result and does not claim vector-index selection for that small-data query.
 
-```text
-embedding VECTOR(512)
-```
+Evidence files:
 
-Run:
-
-```sql
-SHOW INDEX FROM memory_claims;
-```
-
-Expected evidence:
-
-```text
-memory_claim_embedding_idx
-vector_cosine_ops
-identity_id prefix
-```
-
-Run `EXPLAIN` on the identity-scoped semantic retrieval query and record the selected plan exactly.
-
-The completed Managed MCP audit already verified that the vector index exists. For the audited two-claim data set, the tested query plan selected `memory_claims_subject_predicate_idx`, an index join to the primary key and top-k sorting rather than the vector index. The standalone evidence must preserve that factual result without claiming index selection that did not occur.
+- `docs/evidence/cockroach-schema.txt`
+- `docs/evidence/managed-mcp-audit.json`
+- `docs/evidence/production-validation.json`
 
 ## Managed MCP test
 
@@ -300,19 +303,27 @@ Warning interpretation:
 - direct `information_schema.tables` access was blocked by Managed MCP policy; allowed SHOW-backed schema tools completed discovery;
 - the current schema records actor as `demo-owner` but has no `actor_type` or `human_verified` field, so human authorship cannot be machine-confirmed without inference.
 
-## Pass criteria
+## Production verification result
 
-The project passes production verification when:
+The production engineering criteria are satisfied:
 
-- the public application loads in a clean browser;
-- the health endpoint returns `status: ok`;
-- identity restores across sessions by UUID;
-- the baseline creates Version 2;
-- the contradiction opens a conflict without changing the canon;
-- Keep established creates Version 3;
-- provenance records the complete lifecycle;
-- manifest export succeeds;
-- SQL and vector evidence are captured;
-- Managed MCP audit is completed and committed;
-- remaining negative and mutation tests pass;
-- no evidence file contains credentials or private account identifiers.
+- the public application and health endpoint return HTTP 200;
+- CockroachDB reports online;
+- identity restoration across sessions by UUID is verified;
+- the baseline creates Canonical Version 2;
+- the contradiction opens a conflict without changing Current Canon;
+- Keep established creates Canonical Version 3;
+- Accept incoming is verified on an isolated production identity;
+- coexist preserves two scope-compatible active claims;
+- candidate isolation and replay protection are verified;
+- provenance and encrypted S3 manifest export are verified;
+- export retention is configured for 180 days;
+- browser CORS is restricted to the production CloudFront origin;
+- SQL, VECTOR(512), index and factual EXPLAIN evidence are committed;
+- Managed MCP audit is complete;
+- direct Amazon Nova 2 Lite and Titan Text Embeddings V2 runtime evidence is committed;
+- production validation reports 18 passed, 0 failed and 0 pending;
+- all eleven evidence artifacts pass SHA256 verification;
+- committed evidence contains no credentials or private tokens.
+
+The remaining work is limited to final screenshots, the architecture image, clean-browser rehearsal, video publication and Devpost submission.
