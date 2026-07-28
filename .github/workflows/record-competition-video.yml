@@ -1,0 +1,292 @@
+name: Record Competition Video
+
+on:
+  push:
+    paths:
+      - .github/workflows/record-competition-video.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: persistent-self-video-production
+  cancel-in-progress: false
+
+env:
+  APP_URL: https://d31np75gupnbhy.cloudfront.net
+  VOICEOVER_URL: https://www.aidocmaker.com/g0/audio?name=17f2bf7556074471978e8edfa7cddae4
+
+jobs:
+  record-and-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: Check out production repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install project and video dependencies
+        run: |
+          npm install --no-audit --no-fund
+          npm install --no-save --package-lock=false playwright@1.54.1
+          npx playwright install --with-deps chromium
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg espeak-ng fonts-dejavu-core
+
+      - name: Verify application code before recording
+        run: npm run check
+
+      - name: Record the live production judge flow
+        env:
+          VIDEO_OUTPUT_DIR: video-output
+        run: node scripts/record-demo.mjs
+
+      - name: Acquire final English voiceover
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p video-output
+
+          if curl -L --fail --retry 5 --retry-all-errors \
+            --connect-timeout 30 --max-time 300 \
+            -A 'Mozilla/5.0' \
+            "$VOICEOVER_URL" \
+            -o video-output/voiceover-download.bin \
+            && ffprobe -v error -show_entries format=duration \
+              -of default=noprint_wrappers=1:nokey=1 \
+              video-output/voiceover-download.bin >/dev/null 2>&1; then
+            ffmpeg -y -i video-output/voiceover-download.bin \
+              -vn -c:a libmp3lame -b:a 192k video-output/voiceover.mp3
+            echo 'AI Voice Generator audio acquired.'
+          else
+            echo 'Direct audio download was unavailable; creating the documented local fallback voice.'
+            espeak-ng -v en-us+f3 -s 146 -p 43 -f video/voiceover.txt \
+              -w video-output/voiceover-fallback.wav
+            ffmpeg -y -i video-output/voiceover-fallback.wav \
+              -af 'highpass=f=90,lowpass=f=9000,loudnorm=I=-16:TP=-1.5:LRA=8' \
+              -c:a libmp3lame -b:a 192k video-output/voiceover.mp3
+          fi
+
+          ffprobe -v error -show_entries format=duration \
+            -of default=noprint_wrappers=1:nokey=1 \
+            video-output/voiceover.mp3
+
+      - name: Assemble raw browser recording
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$PWD"
+          cat > video-output/raw/concat.txt <<EOF
+          file '$ROOT/video-output/raw/01-intro-and-baseline.webm'
+          file '$ROOT/video-output/raw/02-restoration-conflict-resolution.webm'
+          file '$ROOT/video-output/raw/03-evidence-architecture-final.webm'
+          EOF
+
+          ffmpeg -y \
+            -f concat -safe 0 -i video-output/raw/concat.txt \
+            -an -vf 'fps=30,format=yuv420p' \
+            -c:v libx264 -preset medium -crf 20 \
+            video-output/silent-master.mp4
+
+      - name: Generate timed English subtitles
+        shell: bash
+        run: |
+          set -euo pipefail
+          AUDIO_DURATION=$(ffprobe -v error -show_entries format=duration \
+            -of default=noprint_wrappers=1:nokey=1 video-output/voiceover.mp3)
+          export AUDIO_DURATION
+
+          python3 - <<'PY'
+          import json
+          import os
+          import re
+          from pathlib import Path
+
+          duration = float(os.environ['AUDIO_DURATION'])
+          segments = json.loads(Path('video/voiceover-segments.json').read_text(encoding='utf-8'))
+
+          cues = []
+          for segment in segments:
+              sentences = re.split(r'(?<=[.!?])\s+', segment['text'].strip())
+              buffer = []
+              words = 0
+              for sentence in sentences:
+                  sentence_words = len(sentence.split())
+                  if buffer and words + sentence_words > 24:
+                      cues.append(' '.join(buffer))
+                      buffer = []
+                      words = 0
+                  buffer.append(sentence)
+                  words += sentence_words
+              if buffer:
+                  cues.append(' '.join(buffer))
+
+          weights = [max(1, len(cue.split())) for cue in cues]
+          total_weight = sum(weights)
+          usable = max(1.0, duration - 0.8)
+
+          def stamp(seconds: float) -> str:
+              milliseconds = max(0, round(seconds * 1000))
+              hours, milliseconds = divmod(milliseconds, 3_600_000)
+              minutes, milliseconds = divmod(milliseconds, 60_000)
+              secs, milliseconds = divmod(milliseconds, 1000)
+              return f'{hours:02d}:{minutes:02d}:{secs:02d},{milliseconds:03d}'
+
+          start = 0.35
+          lines = []
+          for index, (cue, weight) in enumerate(zip(cues, weights), start=1):
+              cue_duration = usable * weight / total_weight
+              end = start + cue_duration
+              lines.extend([str(index), f'{stamp(start)} --> {stamp(end)}', cue, ''])
+              start = end
+
+          Path('video-output/subtitles.srt').write_text('\n'.join(lines), encoding='utf-8')
+          print(f'Generated {len(cues)} subtitle cues for {duration:.3f} seconds.')
+          PY
+
+      - name: Build the final subtitled MP4
+        shell: bash
+        run: |
+          set -euo pipefail
+          AUDIO_DURATION=$(ffprobe -v error -show_entries format=duration \
+            -of default=noprint_wrappers=1:nokey=1 video-output/voiceover.mp3)
+          VIDEO_DURATION=$(ffprobe -v error -show_entries format=duration \
+            -of default=noprint_wrappers=1:nokey=1 video-output/silent-master.mp4)
+
+          read -r TARGET_DURATION STRETCH_FACTOR <<EOF
+          $(python3 - <<PY
+          audio = float('$AUDIO_DURATION')
+          video = float('$VIDEO_DURATION')
+          target = audio + 2.2
+          print(f'{target:.6f} {target / video:.9f}')
+          PY
+          )
+          EOF
+
+          ffmpeg -y \
+            -i video-output/silent-master.mp4 \
+            -i video-output/voiceover.mp3 \
+            -filter_complex "[0:v]setpts=${STRETCH_FACTOR}*PTS,subtitles=video-output/subtitles.srt:force_style='FontName=DejaVu Sans,FontSize=22,PrimaryColour=&H00FFFFFF,OutlineColour=&HAA000000,BorderStyle=1,Outline=2,Shadow=1,MarginV=44'[v];[1:a]loudnorm=I=-16:TP=-1.5:LRA=8,apad=pad_dur=3[a]" \
+            -map '[v]' -map '[a]' \
+            -t "$TARGET_DURATION" \
+            -c:v libx264 -preset slow -crf 19 -pix_fmt yuv420p -r 30 \
+            -c:a aac -b:a 192k -movflags +faststart \
+            video-output/aisentica-persistent-self-demo.mp4
+
+      - name: Validate competition video
+        shell: bash
+        run: |
+          set -euo pipefail
+          ffprobe -v error -show_streams -show_format \
+            video-output/aisentica-persistent-self-demo.mp4 \
+            > video-output/final-ffprobe.txt
+
+          python3 - <<'PY'
+          import json
+          import subprocess
+          from pathlib import Path
+
+          video = 'video-output/aisentica-persistent-self-demo.mp4'
+          probe = json.loads(subprocess.check_output([
+              'ffprobe', '-v', 'error', '-show_streams', '-show_format',
+              '-of', 'json', video
+          ], text=True))
+
+          duration = float(probe['format']['duration'])
+          video_streams = [s for s in probe['streams'] if s['codec_type'] == 'video']
+          audio_streams = [s for s in probe['streams'] if s['codec_type'] == 'audio']
+
+          if duration >= 180:
+              raise SystemExit(f'Video exceeds the three-minute limit: {duration:.3f}s')
+          if not video_streams or not audio_streams:
+              raise SystemExit('Final MP4 must contain both video and audio streams.')
+
+          stream = video_streams[0]
+          if (stream.get('width'), stream.get('height')) != (1920, 1080):
+              raise SystemExit(f"Unexpected resolution: {stream.get('width')}x{stream.get('height')}")
+
+          report = {
+              'durationSeconds': round(duration, 3),
+              'resolution': '1920x1080',
+              'videoCodec': stream.get('codec_name'),
+              'audioCodec': audio_streams[0].get('codec_name'),
+              'belowThreeMinutes': True,
+              'hasVideo': True,
+              'hasAudio': True,
+          }
+          Path('video-output/final-validation.json').write_text(
+              json.dumps(report, indent=2) + '\n', encoding='utf-8'
+          )
+          print(json.dumps(report, indent=2))
+          PY
+
+      - name: Prepare publishable deliverables
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf video/generated
+          mkdir -p video/generated/screenshots
+
+          cp video-output/aisentica-persistent-self-demo.mp4 \
+            video/generated/aisentica-persistent-self-demo.mp4
+          cp video-output/subtitles.srt \
+            video/generated/aisentica-persistent-self-demo.srt
+          cp video-output/voiceover.mp3 video/generated/voiceover.mp3
+          cp video-output/screenshots/00-title.png video/generated/thumbnail.png
+          cp video-output/screenshots/11-architecture.png video/generated/architecture.png
+          cp video-output/screenshots/*.png video/generated/screenshots/
+          cp video-output/recording-report.json video/generated/recording-report.json
+          cp video-output/final-validation.json video/generated/final-validation.json
+          cp video-output/final-ffprobe.txt video/generated/final-ffprobe.txt
+          cp video-output/downloads/persistent-self-manifest.json \
+            video/generated/recorded-manifest.json
+
+          cat > video/generated/README.md <<'EOF'
+          # Generated Competition Video
+
+          This directory was produced automatically from the live CloudFront application.
+
+          - `aisentica-persistent-self-demo.mp4` — final 1080p competition video;
+          - `aisentica-persistent-self-demo.srt` — English subtitles;
+          - `voiceover.mp3` — final English narration;
+          - `thumbnail.png` — publication thumbnail;
+          - `architecture.png` — final technical architecture image;
+          - `screenshots/` — definitive product and evidence screenshot set;
+          - `recording-report.json` — live recording identity and scenario record;
+          - `final-validation.json` — duration, resolution and stream validation;
+          - `recorded-manifest.json` — manifest exported during the recorded production flow.
+          EOF
+
+      - name: Upload complete production artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aisentica-persistent-self-competition-video
+          path: |
+            video/generated/
+            video-output/raw/
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Commit final video and screenshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Angela Bogdanova'
+          git config user.email 'angelabogdanova@users.noreply.github.com'
+          git add video/generated
+
+          if git diff --cached --quiet; then
+            echo 'Generated deliverables are unchanged.'
+            exit 0
+          fi
+
+          git commit -m 'video: generate final competition demonstration'
+          git push origin HEAD:main
