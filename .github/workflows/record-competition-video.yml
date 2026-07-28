@@ -1,4 +1,4 @@
-# Revision 5: exact synchronization of evidence, architecture and final scenes.
+# Revision 6: subtitle-free clean stereo master.
 name: Record Competition Video
 
 on:
@@ -8,6 +8,7 @@ on:
       - scripts/record-demo.mjs
       - scripts/prepare-voiceover.py
       - scripts/assemble-competition-video.py
+      - scripts/clean-competition-audio.py
       - video/voiceover-clips.json
   workflow_dispatch:
 
@@ -53,11 +54,14 @@ jobs:
           VIDEO_OUTPUT_DIR: video-output
         run: node scripts/record-demo.mjs
 
-      - name: Prepare high-quality segmented English voiceover
+      - name: Prepare crisp segmented English voiceover
         run: python3 scripts/prepare-voiceover.py
 
-      - name: Assemble and validate the scene-synchronized competition video
+      - name: Assemble the scene-synchronized competition video
         run: python3 scripts/assemble-competition-video.py
+
+      - name: Remove burned subtitles and master clean stereo audio
+        run: python3 scripts/clean-competition-audio.py
 
       - name: Prepare publishable deliverables
         shell: bash
@@ -86,15 +90,15 @@ jobs:
 
           This directory was produced automatically from the live CloudFront application.
 
-          - `aisentica-persistent-self-demo.mp4` — final 1080p competition video;
-          - `aisentica-persistent-self-demo.srt` — English subtitles;
-          - `voiceover.mp3` — final segmented AI Voice Generator narration;
-          - `voiceover-report.json` — voice sources, timings and part durations;
+          - `aisentica-persistent-self-demo.mp4` — clean 1080p competition video without burned-in subtitles;
+          - `aisentica-persistent-self-demo.srt` — optional English subtitle file for YouTube and Devpost;
+          - `voiceover.mp3` — source segmented AI Voice Generator narration;
+          - `voiceover-report.json` — voice sources, timings and audio-mastering settings;
           - `thumbnail.png` — publication thumbnail;
           - `architecture.png` — final technical architecture image;
           - `screenshots/` — definitive product and evidence screenshot set;
           - `recording-report.json` — live recording identity and scenario record;
-          - `final-validation.json` — duration, resolution, codecs and synchronization report;
+          - `final-validation.json` — duration, resolution, codecs, audio and subtitle validation;
           - `recorded-manifest.json` — manifest exported during the recorded production flow.
           EOF
 
@@ -108,7 +112,7 @@ jobs:
           retention-days: 30
           if-no-files-found: error
 
-      - name: Commit final video and screenshots
+      - name: Commit corrected video and screenshots
         shell: bash
         run: |
           set -euo pipefail
@@ -121,6 +125,6 @@ jobs:
             exit 0
           fi
 
-          git commit -m 'video: generate final synchronized competition demonstration'
+          git commit -m 'video: generate clean subtitle-free competition master'
           git pull --rebase origin main
           git push origin HEAD:main
