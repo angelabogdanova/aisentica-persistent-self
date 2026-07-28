@@ -1,0 +1,32 @@
+{
+  "schemaVersion": "1.0",
+  "title": "Aisentica Persistent Self Bedrock Live Runtime Probe",
+  "generatedAt": "2026-07-28T13:12:14.682Z",
+  "proofScope": "Direct live AWS Bedrock Runtime invocations using the region and model identifiers read from the deployed production Lambda configuration.",
+  "productionConfiguration": {
+    "functionName": "aisentica-persistent-self-MemoryFunction-y0G8KwWrCzNE",
+    "modelMode": "hybrid",
+    "reasoningModelId": "global.amazon.nova-2-lite-v1:0",
+    "embeddingModelId": "amazon.titan-embed-text-v2:0",
+    "embeddingDimensionsConfigured": 512
+  },
+  "reasoningInvocation": {
+    "succeeded": true,
+    "requestId": "111d5e56-2c3e-42c2-83d8-eb574dabb355",
+    "httpStatusCode": 200,
+    "stopReason": "end_turn",
+    "usage": {
+      "inputTokens": 81,
+      "outputTokens": 38,
+      "totalTokens": 119
+    },
+    "uniqueMarkerEchoVerified": true
+  },
+  "embeddingInvocation": {
+    "succeeded": true,
+    "requestId": "408694aa-176c-43ac-890b-992af72b6fe3",
+    "httpStatusCode": 200,
+    "returnedDimensions": 512,
+    "finiteValues": 512
+  }
+}
