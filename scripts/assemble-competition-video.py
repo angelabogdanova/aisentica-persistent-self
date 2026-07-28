@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Synchronize the three recorded browser acts with the final segmented voiceover."""
+"""Synchronize recorded browser acts and proof scenes with the final voiceover."""
 
 from __future__ import annotations
 
@@ -46,52 +46,130 @@ def duration(path: Path) -> float:
     return float(probe(path)["format"]["duration"])
 
 
+def render_segment(
+    source: Path,
+    target: Path,
+    source_start: float,
+    source_duration: float,
+    target_duration: float,
+) -> dict[str, float | str]:
+    stretch = target_duration / source_duration
+    run(
+        "ffmpeg",
+        "-loglevel",
+        "error",
+        "-y",
+        "-ss",
+        f"{source_start:.6f}",
+        "-i",
+        str(source),
+        "-t",
+        f"{source_duration:.6f}",
+        "-an",
+        "-vf",
+        f"setpts={stretch:.12f}*PTS,fps=30,format=yuv420p",
+        "-t",
+        f"{target_duration:.6f}",
+        "-c:v",
+        "libx264",
+        "-preset",
+        "medium",
+        "-crf",
+        "20",
+        str(target),
+    )
+    return {
+        "source": source.name,
+        "sourceStartSeconds": round(source_start, 3),
+        "sourceDurationSeconds": round(source_duration, 3),
+        "targetDurationSeconds": round(target_duration, 3),
+        "playbackFactor": round(stretch, 6),
+    }
+
+
 def main() -> None:
     voice_report = json.loads(VOICE_REPORT.read_text(encoding="utf-8"))
     part_targets = {
         int(part): float(seconds)
         for part, seconds in voice_report["partDurationsSeconds"].items()
     }
+    clips = {str(clip["id"]): clip for clip in voice_report["clips"]}
+    short_gap = float(voice_report["shortGapSeconds"])
+    part_gap = float(voice_report["partGapSeconds"])
 
     part_videos: list[Path] = []
-    timing_report: list[dict[str, float | int | str]] = []
-    for part, source in RAW_PARTS.items():
+    timing_report: list[dict[str, object]] = []
+
+    for part in (1, 2):
+        source = RAW_PARTS[part]
         if not source.exists():
             raise FileNotFoundError(source)
         source_duration = duration(source)
         target_duration = part_targets[part]
-        stretch = target_duration / source_duration
         target = OUTPUT / f"video-part-{part}.mp4"
-        run(
-            "ffmpeg",
-            "-loglevel",
-            "error",
-            "-y",
-            "-i",
-            str(source),
-            "-an",
-            "-vf",
-            f"setpts={stretch:.12f}*PTS,fps=30,format=yuv420p",
-            "-t",
-            f"{target_duration:.6f}",
-            "-c:v",
-            "libx264",
-            "-preset",
-            "medium",
-            "-crf",
-            "20",
-            str(target),
-        )
+        timing = render_segment(source, target, 0.0, source_duration, target_duration)
+        timing_report.append({"part": part, **timing})
         part_videos.append(target)
-        timing_report.append(
-            {
-                "part": part,
-                "source": source.name,
-                "sourceDurationSeconds": round(source_duration, 3),
-                "targetDurationSeconds": round(target_duration, 3),
-                "playbackFactor": round(stretch, 6),
-            }
+
+    # The final raw act contains three fixed scenes recorded in this order:
+    # production evidence for 13 seconds, architecture for 18 seconds,
+    # and the closing formula for the remaining duration. Each scene is
+    # independently synchronized to its matching voice clip.
+    proof_source = RAW_PARTS[3]
+    proof_total = duration(proof_source)
+    source_scenes = [
+        ("proof", 0.0, 13.0, "06-proof", short_gap),
+        ("architecture", 13.0, 18.0, "07-architecture", short_gap),
+        ("final", 31.0, max(0.5, proof_total - 31.0), "08-final", part_gap),
+    ]
+
+    final_scene_videos: list[Path] = []
+    scene_report: list[dict[str, object]] = []
+    for index, (scene, start, source_duration, clip_id, gap) in enumerate(source_scenes, start=1):
+        target_duration = float(clips[clip_id]["durationSeconds"]) + gap
+        target = OUTPUT / f"video-part-3-{index:02d}-{scene}.mp4"
+        timing = render_segment(
+            proof_source,
+            target,
+            start,
+            source_duration,
+            target_duration,
         )
+        final_scene_videos.append(target)
+        scene_report.append({"scene": scene, "voiceClip": clip_id, **timing})
+
+    part_three_concat = OUTPUT / "video-part-3-concat.txt"
+    part_three_concat.write_text(
+        "\n".join(f"file '{path.as_posix()}'" for path in final_scene_videos) + "\n",
+        encoding="utf-8",
+    )
+    part_three = OUTPUT / "video-part-3.mp4"
+    run(
+        "ffmpeg",
+        "-loglevel",
+        "error",
+        "-y",
+        "-f",
+        "concat",
+        "-safe",
+        "0",
+        "-i",
+        str(part_three_concat),
+        "-an",
+        "-c:v",
+        "copy",
+        str(part_three),
+    )
+    part_videos.append(part_three)
+    timing_report.append(
+        {
+            "part": 3,
+            "source": proof_source.name,
+            "sourceDurationSeconds": round(proof_total, 3),
+            "targetDurationSeconds": round(sum(float(scene["targetDurationSeconds"]) for scene in scene_report), 3),
+            "scenes": scene_report,
+        }
+    )
 
     concat_file = OUTPUT / "video-concat.txt"
     concat_file.write_text(
