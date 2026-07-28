@@ -30,16 +30,16 @@
     "url": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/b6fc4bbc-235f-4374-9c91-8919641f44dd.mp3"
   },
   {
-    "id": "06-architecture",
-    "part": 3,
-    "text": "CockroachDB Cloud is the authority layer: identities, sources, claims, VECTOR storage, conflicts, resolutions, snapshots, and provenance remain transactional and queryable in one system. AWS Lambda orchestrates memory operations. Amazon Nova Two Lite supplies reasoning. Titan supplies embeddings. API Gateway, S3, CloudFront, CloudWatch, and X-Ray deliver and observe the production application.",
-    "url": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/437c610b-e487-4de5-aa75-2bedba93adf0.mp3"
-  },
-  {
-    "id": "07-proof",
+    "id": "06-proof",
     "part": 3,
     "text": "The official CockroachDB Cloud Managed MCP Server independently audited the live memory layer in strictly read-only mode: sixteen passed, two warnings, zero failed. Direct production validation completed eighteen checks with zero failures and zero pending items. Every committed evidence artifact passes SHA-two-fifty-six verification.",
     "url": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/d926571d-fb0c-4262-acb5-00e0c46aa379.mp3"
+  },
+  {
+    "id": "07-architecture",
+    "part": 3,
+    "text": "CockroachDB Cloud is the authority layer: identities, sources, claims, VECTOR storage, conflicts, resolutions, snapshots, and provenance remain transactional and queryable in one system. AWS Lambda orchestrates memory operations. Amazon Nova Two Lite supplies reasoning. Titan supplies embeddings. API Gateway, S3, CloudFront, CloudWatch, and X-Ray deliver and observe the production application.",
+    "url": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/437c610b-e487-4de5-aa75-2bedba93adf0.mp3"
   },
   {
     "id": "08-final",
