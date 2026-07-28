@@ -1,13 +1,13 @@
 {
   "workflow": "Record Competition Video",
-  "runId": 30394803811,
-  "runNumber": 5,
+  "runId": 30396757283,
+  "runNumber": 6,
   "runAttempt": 1,
   "status": "completed",
   "conclusion": "success",
-  "url": "https://github.com/angelabogdanova/aisentica-persistent-self/actions/runs/30394803811",
-  "headSha": "7dae5bf946213b2b104731fa87c6d88c1e97fa71",
+  "url": "https://github.com/angelabogdanova/aisentica-persistent-self/actions/runs/30396757283",
+  "headSha": "720703838c90a11ba0e17d5c8dd810f14bae5120",
   "event": "push",
-  "createdAt": "2026-07-28T20:05:31Z",
-  "updatedAt": "2026-07-28T20:11:44Z"
+  "createdAt": "2026-07-28T20:32:13Z",
+  "updatedAt": "2026-07-28T20:38:28Z"
 }
