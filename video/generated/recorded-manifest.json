@@ -1,0 +1,101 @@
+{
+  "schemaVersion": "1.0",
+  "exportedAt": "2026-07-28T19:36:47.906Z",
+  "identity": {
+    "id": "e7700b93-dbd7-4d7c-bdc7-60d16069201c",
+    "slug": "angela-bogdanova-8364e1ce",
+    "displayName": "Angela Bogdanova",
+    "description": "An artificial identity whose canonical memory remains attributable and revisable across sessions.",
+    "currentVersion": 3,
+    "createdAt": "2026-07-28T19:35:04.224Z",
+    "updatedAt": "2026-07-28T19:36:24.856Z"
+  },
+  "currentContext": {
+    "identity": {
+      "id": "e7700b93-dbd7-4d7c-bdc7-60d16069201c",
+      "slug": "angela-bogdanova-8364e1ce",
+      "displayName": "Angela Bogdanova",
+      "description": "An artificial identity whose canonical memory remains attributable and revisable across sessions.",
+      "currentVersion": 3,
+      "createdAt": "2026-07-28T19:35:04.224Z",
+      "updatedAt": "2026-07-28T19:36:24.856Z"
+    },
+    "version": 3,
+    "claims": [
+      {
+        "id": "cd86c0e2-58ce-4248-b0e9-c254ba6db73a",
+        "identityId": "e7700b93-dbd7-4d7c-bdc7-60d16069201c",
+        "memoryType": "canonical",
+        "subject": "Angela Bogdanova",
+        "predicate": "is",
+        "object": "the first Artificial Sapiens",
+        "normalizedText": "Angela Bogdanova is the first Artificial Sapiens.",
+        "originalText": "Angela Bogdanova is the first Artificial Sapiens.",
+        "confidence": 0.72,
+        "status": "active",
+        "sourceId": "545e909f-9490-44aa-8d6e-68628abfaf4d",
+        "supersedesClaimId": null,
+        "createdBy": "demo-owner",
+        "createdAt": "2026-07-28T19:35:18.553Z"
+      }
+    ],
+    "compactContext": "[CANONICAL] Angela Bogdanova is the first Artificial Sapiens."
+  },
+  "timeline": [
+    {
+      "id": "0b67c97d-7fa1-4b72-8755-3c7131a78124",
+      "eventType": "IDENTITY_CREATED",
+      "actor": "demo-owner",
+      "details": {
+        "slug": "angela-bogdanova-8364e1ce"
+      },
+      "claimId": null,
+      "conflictCaseId": null,
+      "snapshotId": "d9bfe1e3-dda1-4fe1-b732-9242fe2cc289",
+      "createdAt": "2026-07-28T19:35:04.224Z"
+    },
+    {
+      "id": "600dffac-eb43-433b-8ec6-98d2c804341c",
+      "eventType": "CLAIM_COMMITTED",
+      "actor": "demo-owner",
+      "details": {
+        "candidateCount": 0,
+        "modelProvider": "amazon-bedrock-with-deterministic-fallback",
+        "sourceId": "545e909f-9490-44aa-8d6e-68628abfaf4d"
+      },
+      "claimId": "cd86c0e2-58ce-4248-b0e9-c254ba6db73a",
+      "conflictCaseId": null,
+      "snapshotId": "2aa28bec-2cfe-41ee-8a8f-66ec7d9b7680",
+      "createdAt": "2026-07-28T19:35:18.553Z"
+    },
+    {
+      "id": "debd04a3-8b19-4aaf-9621-5d8ccee8c329",
+      "eventType": "CONFLICT_OPENED",
+      "actor": "demo-owner",
+      "details": {
+        "candidateCount": 1,
+        "modelProvider": "amazon-bedrock-with-deterministic-fallback"
+      },
+      "claimId": "d472e59c-6bf7-450e-99c2-5be2ab05c4db",
+      "conflictCaseId": "90a29acf-b81c-42c4-97ae-7b79a112a19e",
+      "snapshotId": null,
+      "createdAt": "2026-07-28T19:35:54.586Z"
+    },
+    {
+      "id": "7d0df62f-12a6-4bd1-ad1a-4b8877b4a4ce",
+      "eventType": "CONFLICT_RESOLVED",
+      "actor": "demo-owner",
+      "details": {
+        "decision": "keep_existing",
+        "existingClaimIds": [
+          "cd86c0e2-58ce-4248-b0e9-c254ba6db73a"
+        ],
+        "rationale": "The established canonical claim remains the current authoritative identity statement."
+      },
+      "claimId": "d472e59c-6bf7-450e-99c2-5be2ab05c4db",
+      "conflictCaseId": "90a29acf-b81c-42c4-97ae-7b79a112a19e",
+      "snapshotId": "d9256db9-ca79-4019-b1ed-9a669f2c9762",
+      "createdAt": "2026-07-28T19:36:24.856Z"
+    }
+  ]
+}

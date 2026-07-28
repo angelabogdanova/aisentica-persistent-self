@@ -1,0 +1,9 @@
+{
+  "durationSeconds": 175.0,
+  "resolution": "1920x1080",
+  "videoCodec": "h264",
+  "audioCodec": "aac",
+  "belowThreeMinutes": true,
+  "hasVideo": true,
+  "hasAudio": true
+}

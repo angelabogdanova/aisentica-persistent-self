@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-07-28T19:37:37.482Z",
+  "application": "https://d31np75gupnbhy.cloudfront.net",
+  "identityId": "e7700b93-dbd7-4d7c-bdc7-60d16069201c",
+  "baseline": "Angela Bogdanova is the first Artificial Sapiens.",
+  "contradiction": "Angela Bogdanova is not the first Artificial Sapiens.",
+  "decision": "keep_existing",
+  "rationale": "The established canonical claim remains the current authoritative identity statement.",
+  "productionValidation": {
+    "passed": 18,
+    "failed": 0,
+    "pending": 0
+  },
+  "managedMcp": {
+    "passed": 16,
+    "warnings": 2,
+    "failed": 0,
+    "percent": 88.89
+  },
+  "rawParts": [
+    "01-intro-and-baseline.webm",
+    "02-restoration-conflict-resolution.webm",
+    "03-evidence-architecture-final.webm"
+  ],
+  "screenshots": [
+    "00-title.png",
+    "01-product.png",
+    "02-identity-version-1.png",
+    "03-canonical-version-2.png",
+    "04-restored-version-2.png",
+    "05-open-conflict.png",
+    "06-candidate-isolation-version-2.png",
+    "07-canonical-version-3.png",
+    "08-provenance.png",
+    "09-manifest-export.png",
+    "10-production-evidence.png",
+    "11-architecture.png",
+    "12-final-formula.png"
+  ]
+}
