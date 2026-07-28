@@ -1,6 +1,6 @@
 # Aisentica Persistent Self — Project Continuity
 
-Status date: July 25, 2026
+Status date: July 28, 2026
 
 Document role: current operational record for resuming work in a new session.
 
@@ -14,7 +14,7 @@ Claim → Source → Conflict → Resolution → Canon
 
 ## Current phase
 
-Production deployment, production validation, hardening, Managed MCP audit, CockroachDB evidence and direct Amazon Bedrock runtime evidence are complete. The project is now in final submission preparation: architecture image, screenshots, clean-browser judge rehearsal, video publication and Devpost submission.
+Production deployment, production validation, hardening, Managed MCP audit, CockroachDB evidence and direct Amazon Bedrock runtime evidence are complete. Repository-facing submission surfaces have been synchronized with the verified production state. The immediate operational step is to deploy the updated frontend, verify it after CloudFront invalidation, and then proceed to the architecture image, screenshots, clean-browser judge rehearsal, video publication and Devpost submission.
 
 ## Public deployment
 
@@ -136,7 +136,8 @@ Updated:
 - `docs/testing-instructions.md` defines the public verification path;
 - `docs/devpost-submission-draft.md` uses the same narrative;
 - `docs/evidence/main-demo-scenario.json` defines the canonical evidence contract;
-- `docs/competition-record.md` records production completion and remaining work;
+- `docs/competition-record.md` records production completion and remaining submission work;
+- `docs/deployment.md` records completed CORS hardening, Managed MCP audit and production validation;
 - `docs/mcp-memory-auditor.md` documents the completed live read-only production audit.
 
 ## Completed production verification
@@ -191,8 +192,18 @@ Updated:
 - verified every committed evidence artifact successfully;
 - confirmed that the evidence package contains no passwords, access keys, database URLs, private tokens or private account identifiers.
 
+### Submission-surface synchronization
+
+- replaced the public frontend’s obsolete Managed MCP pending message with the completed audit result;
+- updated the competition record to reflect completed production validation, hardening, Bedrock evidence and SHA256 verification;
+- converted deployment instructions from future-tense hardening and audit tasks into current production status plus reproducible procedures;
+- updated this continuity record to the July 28, 2026 project state;
+- verified the official Devpost competition domain as `cockroachdb-ai.devpost.com`.
+
 ## Remaining submission work
 
+- deploy the synchronized frontend through `Deploy to AWS` in `hybrid` mode;
+- verify the completed Managed MCP result on the public CloudFront application after invalidation;
 - create the final architecture image;
 - capture the final application, Canonical Version 3, provenance, export and Managed MCP screenshots;
 - run the complete judge flow from a clean browser or incognito window;
@@ -204,9 +215,9 @@ Updated:
 
 ## Immediate next action
 
-Create the final architecture image, then capture the definitive screenshot set from the production application and committed evidence package.
+Run the `Deploy to AWS` workflow from `main` with `model_mode=hybrid`, wait for the CloudFront invalidation step to complete, and verify that the public architecture strip reports the completed Managed MCP audit result: 16 passed, 2 warnings, 0 failed.
 
-Do not alter the production memory engine, infrastructure or completed evidence unless a verified defect is found. The engineering baseline is complete and stable.
+After that production verification, create the final architecture image and capture the definitive screenshot set. Do not alter the production memory engine, infrastructure or completed evidence unless a verified defect is found. The engineering baseline is complete and stable.
 
 ## Definition of Done
 
@@ -216,6 +227,7 @@ The submission is complete when all conditions are simultaneously true:
 - the deployment workflow is green;
 - CloudFormation is stable;
 - the CloudFront application is online;
+- the public architecture strip presents the completed Managed MCP audit result;
 - the API health endpoint returns HTTP 200;
 - CockroachDB persistence and fresh-session restoration are verified;
 - Canonical Version 3 and the complete conflict lifecycle are verified;
