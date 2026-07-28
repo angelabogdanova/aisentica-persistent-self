@@ -1,9 +1,34 @@
 {
-  "durationSeconds": 175.0,
+  "durationSeconds": 165.433,
   "resolution": "1920x1080",
   "videoCodec": "h264",
   "audioCodec": "aac",
   "belowThreeMinutes": true,
   "hasVideo": true,
-  "hasAudio": true
+  "hasAudio": true,
+  "voice": "AI Voice Generator clear",
+  "voiceClipCount": 8,
+  "parts": [
+    {
+      "part": 1,
+      "source": "01-intro-and-baseline.webm",
+      "sourceDurationSeconds": 49.2,
+      "targetDurationSeconds": 45.136,
+      "playbackFactor": 0.917398
+    },
+    {
+      "part": 2,
+      "source": "02-restoration-conflict-resolution.webm",
+      "sourceDurationSeconds": 77.4,
+      "targetDurationSeconds": 68.12,
+      "playbackFactor": 0.880103
+    },
+    {
+      "part": 3,
+      "source": "03-evidence-architecture-final.webm",
+      "sourceDurationSeconds": 39.88,
+      "targetDurationSeconds": 52.16,
+      "playbackFactor": 1.307924
+    }
+  ]
 }
