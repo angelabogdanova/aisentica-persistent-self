@@ -12,23 +12,53 @@
     {
       "part": 1,
       "source": "01-intro-and-baseline.webm",
-      "sourceDurationSeconds": 49.2,
+      "sourceStartSeconds": 0.0,
+      "sourceDurationSeconds": 47.32,
       "targetDurationSeconds": 45.136,
-      "playbackFactor": 0.917398
+      "playbackFactor": 0.953846
     },
     {
       "part": 2,
       "source": "02-restoration-conflict-resolution.webm",
-      "sourceDurationSeconds": 77.4,
+      "sourceStartSeconds": 0.0,
+      "sourceDurationSeconds": 77.28,
       "targetDurationSeconds": 68.12,
-      "playbackFactor": 0.880103
+      "playbackFactor": 0.88147
     },
     {
       "part": 3,
       "source": "03-evidence-architecture-final.webm",
       "sourceDurationSeconds": 39.88,
       "targetDurationSeconds": 52.16,
-      "playbackFactor": 1.307924
+      "scenes": [
+        {
+          "scene": "proof",
+          "voiceClip": "06-proof",
+          "source": "03-evidence-architecture-final.webm",
+          "sourceStartSeconds": 0.0,
+          "sourceDurationSeconds": 13.0,
+          "targetDurationSeconds": 21.16,
+          "playbackFactor": 1.627692
+        },
+        {
+          "scene": "architecture",
+          "voiceClip": "07-architecture",
+          "source": "03-evidence-architecture-final.webm",
+          "sourceStartSeconds": 13.0,
+          "sourceDurationSeconds": 18.0,
+          "targetDurationSeconds": 24.592,
+          "playbackFactor": 1.366222
+        },
+        {
+          "scene": "final",
+          "voiceClip": "08-final",
+          "source": "03-evidence-architecture-final.webm",
+          "sourceStartSeconds": 31.0,
+          "sourceDurationSeconds": 8.88,
+          "targetDurationSeconds": 6.408,
+          "playbackFactor": 0.721622
+        }
+      ]
     }
   ]
 }
