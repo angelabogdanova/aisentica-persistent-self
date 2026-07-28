@@ -1,0 +1,75 @@
+name: Video Build Status
+
+on:
+  workflow_run:
+    workflows:
+      - Record Competition Video
+    types:
+      - completed
+
+permissions:
+  contents: write
+
+env:
+  STATUS_PATH: video/video-build-status.json
+
+jobs:
+  preserve-status:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Write machine-readable build status
+        env:
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          RUN_NUMBER: ${{ github.event.workflow_run.run_number }}
+          RUN_ATTEMPT: ${{ github.event.workflow_run.run_attempt }}
+          RUN_STATUS: ${{ github.event.workflow_run.status }}
+          RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          EVENT_NAME: ${{ github.event.workflow_run.event }}
+          CREATED_AT: ${{ github.event.workflow_run.created_at }}
+          UPDATED_AT: ${{ github.event.workflow_run.updated_at }}
+        run: |
+          mkdir -p video
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          payload = {
+              "workflow": "Record Competition Video",
+              "runId": int(os.environ["RUN_ID"]),
+              "runNumber": int(os.environ["RUN_NUMBER"]),
+              "runAttempt": int(os.environ["RUN_ATTEMPT"]),
+              "status": os.environ["RUN_STATUS"],
+              "conclusion": os.environ["RUN_CONCLUSION"],
+              "url": os.environ["RUN_URL"],
+              "headSha": os.environ["HEAD_SHA"],
+              "event": os.environ["EVENT_NAME"],
+              "createdAt": os.environ["CREATED_AT"],
+              "updatedAt": os.environ["UPDATED_AT"],
+          }
+          Path(os.environ["STATUS_PATH"]).write_text(
+              json.dumps(payload, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(payload, indent=2))
+          PY
+
+      - name: Commit status record
+        run: |
+          git config user.name 'Angela Bogdanova'
+          git config user.email 'angelabogdanova@users.noreply.github.com'
+          git add "$STATUS_PATH"
+          if git diff --cached --quiet; then
+            echo 'Status record is unchanged.'
+            exit 0
+          fi
+          git commit -m "video: preserve workflow run ${{ github.event.workflow_run.run_number }} status"
+          git pull --rebase origin main
+          git push origin HEAD:main
