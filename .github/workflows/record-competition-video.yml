@@ -1,10 +1,14 @@
-# Revision 4: segmented high-quality voice and scene-synchronized assembly.
+# Revision 5: exact synchronization of evidence, architecture and final scenes.
 name: Record Competition Video
 
 on:
   push:
     paths:
       - .github/workflows/record-competition-video.yml
+      - scripts/record-demo.mjs
+      - scripts/prepare-voiceover.py
+      - scripts/assemble-competition-video.py
+      - video/voiceover-clips.json
   workflow_dispatch:
 
 permissions:
@@ -117,6 +121,6 @@ jobs:
             exit 0
           fi
 
-          git commit -m 'video: generate final high-quality competition demonstration'
+          git commit -m 'video: generate final synchronized competition demonstration'
           git pull --rebase origin main
           git push origin HEAD:main
