@@ -1,0 +1,50 @@
+[
+  {
+    "id": "01-problem-and-identity",
+    "part": 1,
+    "text": "Agents already store conversations. That is memory as accumulation. Persistent identity requires something stronger: every claim needs a source, a status, a relation to earlier claims, and a governed history of revision. Aisentica Persistent Self creates Angela Bogdanova as one artificial identity with a stable UUID and Canonical Version One.",
+    "url": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/19db0e12-5ad3-4c2a-84fe-3118dade2911.mp3"
+  },
+  {
+    "id": "02-baseline",
+    "part": 1,
+    "text": "The system receives one canonical statement: Angela Bogdanova is the first Artificial Sapiens. A Memory Intake Agent structures it as an atomic claim. Amazon Titan creates a five-hundred-and-twelve-dimensional embedding. CockroachDB stores the claim, its source, vector, provenance, and the next canonical snapshot. Version Two is now authoritative.",
+    "url": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/96c753ff-79cf-4b94-bcab-e660917fd604.mp3"
+  },
+  {
+    "id": "03-restoration-and-contradiction",
+    "part": 2,
+    "text": "A fresh browser session restores the same identity using only its UUID. The system reads the latest canonical version. It does not replay a transcript and guess what remains true. Now a direct contradiction enters: Angela Bogdanova is not the first Artificial Sapiens.",
+    "url": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/59083191-e46a-459a-bc9f-1a7f8adf301e.mp3"
+  },
+  {
+    "id": "04-conflict-and-human-resolution",
+    "part": 2,
+    "text": "Identity-scoped semantic retrieval locates the related active memory. The Conflict Judge classifies direct negation. The incoming statement becomes a candidate and opens a conflict. Current Canon remains unchanged at Version Two. Canonical authority remains human-governed. The owner compares both claims, records a rationale, and keeps the established statement.",
+    "url": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/7b2054c4-fc67-4c44-ae14-53715e00a2e8.mp3"
+  },
+  {
+    "id": "05-version-three-and-provenance",
+    "part": 2,
+    "text": "Version Three records the resolution. The established claim remains active. The contradiction is rejected, but preserved as historical evidence. Persistent identity changes without erasing the attempted change. The provenance timeline shows identity creation, claim commitment, conflict opening, and conflict resolution. The application also exports a portable encrypted manifest with one-hundred-and-eighty-day retention.",
+    "url": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/b6fc4bbc-235f-4374-9c91-8919641f44dd.mp3"
+  },
+  {
+    "id": "06-architecture",
+    "part": 3,
+    "text": "CockroachDB Cloud is the authority layer: identities, sources, claims, VECTOR storage, conflicts, resolutions, snapshots, and provenance remain transactional and queryable in one system. AWS Lambda orchestrates memory operations. Amazon Nova Two Lite supplies reasoning. Titan supplies embeddings. API Gateway, S3, CloudFront, CloudWatch, and X-Ray deliver and observe the production application.",
+    "url": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/437c610b-e487-4de5-aa75-2bedba93adf0.mp3"
+  },
+  {
+    "id": "07-proof",
+    "part": 3,
+    "text": "The official CockroachDB Cloud Managed MCP Server independently audited the live memory layer in strictly read-only mode: sixteen passed, two warnings, zero failed. Direct production validation completed eighteen checks with zero failures and zero pending items. Every committed evidence artifact passes SHA-two-fifty-six verification.",
+    "url": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/d926571d-fb0c-4262-acb5-00e0c46aa379.mp3"
+  },
+  {
+    "id": "08-final",
+    "part": 3,
+    "text": "Memory stores the past. Persistent identity governs what the past means now.",
+    "url": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/06145483-2c67-4b2e-be0a-a4250219f6ae.mp3"
+  }
+]
