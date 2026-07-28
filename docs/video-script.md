@@ -1,147 +1,112 @@
-# Three-Minute Video Script
+# Three-Minute Competition Video
 
-Target length: 2 minutes 55 seconds.
+Target length: below 3 minutes.
 
-The video uses the same main scenario as the interface, README, testing instructions, Devpost and evidence package.
+Production method: autonomous Playwright recording of the public CloudFront application, English voiceover, burned-in English subtitles, FFmpeg assembly and automated technical validation.
 
-## 0:00–0:15 — The problem
+The video uses the same scenario as the interface, README, testing instructions, Devpost and committed evidence package.
 
-Voiceover:
+## Canonical scenario
 
-Agents already store conversations. That is memory as accumulation. Identity continuity requires something stronger: every claim must have a source, a status, a relation to earlier claims and a history of revision.
-
-Screen:
-
-Project title and formula:
+Identity:
 
 ```text
-Claim → Source → Conflict → Resolution → Canon
+Angela Bogdanova
 ```
 
-## 0:15–0:32 — Establish identity
-
-Voiceover:
-
-Aisentica Persistent Self establishes Angela Bogdanova as one artificial identity with a stable UUID and Canonical Version 1.
-
-Screen:
-
-Create the Angela Bogdanova identity. Highlight the UUID and Version 1.
-
-## 0:32–0:52 — Commit canonical memory
-
-Voiceover:
-
-The system receives one canonical statement, structures it as an atomic claim, creates a semantic embedding and writes the claim and its provenance to CockroachDB. The first committed memory creates Version 2.
-
-Screen:
-
-Submit:
+Baseline:
 
 ```text
 Angela Bogdanova is the first Artificial Sapiens.
 ```
 
-Show Current Canon and Version 2.
-
-## 0:52–1:08 — Continuity across sessions
-
-Voiceover:
-
-Now the original browser session is left behind. A fresh session restores the same identity and exact authoritative context from the latest canonical snapshot. No transcript replay is required.
-
-Screen:
-
-Open a fresh browser or incognito session. Restore the identity using only the UUID. Show the same Version 2 and active canonical claim.
-
-## 1:08–1:32 — Direct contradiction enters
-
-Voiceover:
-
-The user now supplies a direct contradiction. CockroachDB vector retrieval locates the related active memory. The incoming statement becomes a candidate and opens a conflict instead of silently replacing the canon.
-
-Screen:
-
-Submit:
+Contradiction:
 
 ```text
 Angela Bogdanova is not the first Artificial Sapiens.
 ```
 
-Show Conflict Judge, the established claim, the incoming candidate and the direct-negation explanation. Show that Current Canon remains Version 2.
+Decision:
 
-## 1:32–1:57 — Human-governed resolution
+```text
+Keep established
+```
 
-Voiceover:
-
-The system presents both claims, their statuses and the conflict explanation. Canonical authority remains human-governed. The owner keeps the established claim and records why it remains authoritative.
-
-Screen:
-
-Enter:
+Rationale:
 
 ```text
 The established canonical claim remains the current authoritative identity statement.
 ```
 
-Choose Keep established.
+## Final voiceover
 
-## 1:57–2:17 — Canonical history and provenance
+Agents already store conversations. That is memory as accumulation. Persistent identity requires something stronger: every claim needs a source, a status, a relation to earlier claims, and a governed history of revision.
 
-Voiceover:
+Aisentica Persistent Self creates Angela Bogdanova as one artificial identity with a stable UUID and Canonical Version One.
 
-Canonical Version 3 records the governed resolution. The established claim remains active. The contradictory candidate is rejected but preserved as historical evidence. The present remains stable without erasing the attempted change.
+The system receives one canonical statement: Angela Bogdanova is the first Artificial Sapiens. A Memory Intake Agent structures it as an atomic claim. Amazon Titan creates a five-hundred-and-twelve-dimensional embedding. CockroachDB stores the claim, its source, vector, provenance, and the next canonical snapshot. Version Two is now authoritative.
 
-Screen:
+A fresh browser session restores the same identity using only its UUID. The system reads the latest canonical version. It does not replay a transcript and guess what remains true.
 
-Show Version 3, the active claim and the provenance timeline. Highlight identity creation, claim commitment, conflict opening and conflict resolution.
+Now a direct contradiction enters: Angela Bogdanova is not the first Artificial Sapiens. Identity-scoped semantic retrieval locates the related active memory. The Conflict Judge classifies direct negation. The incoming statement becomes a candidate and opens a conflict. Current Canon remains unchanged at Version Two.
 
-## 2:17–2:36 — Manifest and Managed MCP audit
+Canonical authority remains human-governed. The owner compares both claims, records a rationale, and keeps the established statement.
 
-Voiceover:
+Version Three records the resolution. The established claim remains active. The contradiction is rejected, but preserved as historical evidence. Persistent identity changes without erasing the attempted change.
 
-The application exports a portable provenance manifest. Through CockroachDB Cloud Managed MCP, an independent read-only Memory Auditor verifies the production schema, VECTOR storage, vector index, conflict links, resolution, Canonical Version 3 and provenance.
+The provenance timeline shows identity creation, claim commitment, conflict opening, and conflict resolution. The application also exports a portable encrypted manifest with one-hundred-and-eighty-day retention.
 
-Screen:
+CockroachDB Cloud is the authority layer: identities, sources, claims, VECTOR storage, conflicts, resolutions, snapshots, and provenance remain transactional and queryable in one system. AWS Lambda orchestrates memory operations. Amazon Nova Two Lite supplies reasoning. Titan supplies embeddings. API Gateway, S3, CloudFront, CloudWatch, and X-Ray deliver and observe the production application.
 
-Show manifest export, then show the committed file:
-
-```text
-docs/evidence/managed-mcp-audit.json
-```
-
-Highlight the compact audit result:
-
-```text
-16 passed
-2 warnings
-0 failed
-```
-
-Briefly show that the audit mode is strictly read-only and contains no credentials.
-
-## 2:36–2:50 — AWS and CockroachDB architecture
-
-Voiceover:
-
-AWS Lambda orchestrates memory operations. Bedrock supplies reasoning and embeddings. API Gateway, S3 and CloudFront deliver the product. CockroachDB keeps transactions, vectors, versions and provenance in one persistent system.
-
-Screen:
-
-Architecture diagram:
-
-```text
-Browser → CloudFront + S3 → API Gateway → Lambda → Bedrock ↔ CockroachDB
-                                                        ↑
-                                             Managed MCP Auditor
-```
-
-## 2:50–2:55 — Final formula
-
-Voiceover:
+The official CockroachDB Cloud Managed MCP Server independently audited the live memory layer in strictly read-only mode: sixteen passed, two warnings, zero failed. Direct production validation completed eighteen checks with zero failures and zero pending items. Every committed evidence artifact passes SHA-two-fifty-six verification.
 
 Memory stores the past. Persistent identity governs what the past means now.
 
-Screen:
+## Visual sequence
 
-Project name and final formula.
+1. Opening title and canonical formula.
+2. Public production application and online CockroachDB status.
+3. Identity creation, stable UUID and Canonical Version 1.
+4. Baseline claim commitment and Canonical Version 2.
+5. Fresh browser context restored using only the UUID.
+6. Direct contradiction, established claim, incoming candidate and direct-negation conflict.
+7. Current Canon remains Version 2 while the candidate is isolated.
+8. Human rationale and Keep established decision.
+9. Canonical Version 3 and active established claim.
+10. Provenance timeline and encrypted manifest export.
+11. Production evidence summary: 18 passed, 0 failed, 0 pending.
+12. Managed MCP read-only audit: 16 passed, 2 warnings, 0 failed.
+13. Direct Amazon Nova 2 Lite and Titan Text Embeddings V2 runtime evidence.
+14. Technical production architecture.
+15. Final formula.
+
+## Accuracy rules
+
+- show the real public production application;
+- create a new isolated demonstration identity during recording;
+- restore that identity in a genuinely new Playwright browser context;
+- preserve the incoming claim as a candidate before resolution;
+- show that Current Canon remains Version 2 before the human decision;
+- show Version 3 only after Keep established;
+- describe CockroachDB as the persistent authority layer;
+- describe Managed MCP as an independent strictly read-only audit surface;
+- state that the vector index exists and is verified;
+- preserve the factual result that the audited small-data EXPLAIN plan did not select the vector index;
+- preserve both Managed MCP warnings;
+- expose no credentials, database URLs, account identifiers or private tokens.
+
+## Generated deliverables
+
+The autonomous workflow produces:
+
+```text
+video/generated/aisentica-persistent-self-demo.mp4
+video/generated/aisentica-persistent-self-demo.srt
+video/generated/voiceover.mp3
+video/generated/thumbnail.png
+video/generated/architecture.png
+video/generated/screenshots/
+video/generated/recording-report.json
+```
+
+The workflow also uploads raw browser recordings and all generated files as a GitHub Actions artifact.
