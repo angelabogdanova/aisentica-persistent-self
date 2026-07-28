@@ -70,16 +70,24 @@ Completed:
 - green CI and deployment workflows;
 - live CockroachDB Cloud Managed MCP connection;
 - strictly read-only Memory Auditor execution;
-- sanitized Managed MCP audit JSON committed to the evidence package.
+- sanitized Managed MCP audit JSON committed to the evidence package;
+- 18 production validation checks completed with 0 failures and 0 pending items;
+- Accept incoming, coexist, candidate isolation and replay protection verified in production;
+- browser CORS restricted to the production CloudFront origin;
+- encrypted provenance-export retention extended to 180 days;
+- direct live Amazon Nova 2 Lite and Titan Text Embeddings V2 runtime evidence committed;
+- eleven sanitized evidence artifacts committed and verified through `docs/evidence/SHA256SUMS`.
 
-Pending:
+Remaining submission work:
 
-- final standalone SQL, vector and Bedrock evidence package;
-- remaining negative and mutation tests;
-- CORS restriction to the CloudFront origin;
-- final screenshots and architecture image;
-- final public video;
-- completed Devpost submission.
+- deploy the synchronized public frontend and verify the completed Managed MCP result after CloudFront invalidation;
+- create the final architecture image;
+- capture the final product, Canonical Version 3, provenance, export and Managed MCP screenshots;
+- run the complete judge flow from a clean browser or incognito window;
+- record and publish the final video below three minutes;
+- verify every public application, repository, video and evidence link in incognito;
+- complete and submit the Devpost entry;
+- preserve submission confirmation and remove temporary credentials after submission.
 
 ## Managed MCP completion record
 
@@ -162,23 +170,27 @@ Both rationales express the same keep-established decision. The evidence package
 |---|---|---|
 | Agentic application | Memory Intake, semantic retrieval, Conflict Judge and human resolution | Complete |
 | Persistent memory | CockroachDB identities, claims, sources, snapshots and provenance ledger | Complete |
-| CockroachDB tool 1 | Distributed Vector Indexing with `VECTOR(512)` and `memory_claim_embedding_idx` | Implemented and independently verified by Managed MCP; final standalone SQL evidence pending |
-| CockroachDB tool 2 | Managed MCP Server with read-only Memory Auditor | Complete; audit JSON committed |
+| CockroachDB tool 1 | Distributed Vector Indexing with `VECTOR(512)` and `memory_claim_embedding_idx` | Complete; schema, index and factual EXPLAIN evidence committed and independently verified by Managed MCP |
+| CockroachDB tool 2 | Managed MCP Server with read-only Memory Auditor | Complete; sanitized audit JSON committed |
 | Additional CockroachDB tool | Agent Skills operational audit workflow | Complete as documented repeatable procedure |
 | AWS deployment | Lambda, API Gateway, Bedrock, S3, CloudFront, X-Ray and CloudWatch | Complete |
 | Public repository | `angelabogdanova/aisentica-persistent-self` | Complete |
 | Open-source license | MIT | Complete |
-| Working demo | `https://d31np75gupnbhy.cloudfront.net` | Complete |
+| Working demo | `https://d31np75gupnbhy.cloudfront.net` | Complete; synchronized frontend redeploy pending |
 | API health | `https://8457okzg1b.execute-api.us-east-1.amazonaws.com/health` | Complete |
+| Production validation | `docs/evidence/production-validation.json` | Complete: 18 passed, 0 failed, 0 pending |
+| Direct Bedrock runtime evidence | `docs/evidence/bedrock-runtime-evidence.json` | Complete: Nova HTTP 200; Titan HTTP 200 with 512 finite dimensions |
+| Evidence integrity | `docs/evidence/SHA256SUMS` | Complete; all eleven evidence artifacts verified |
 | Video below three minutes | Script in `docs/video-script.md` | Recording pending |
-| CockroachDB layer shown | UI conflict flow, SQL/vector evidence and Managed MCP Memory Auditor | MCP complete; remaining evidence and video pending |
+| CockroachDB layer shown | Product conflict flow, SQL/vector evidence and Managed MCP Memory Auditor | Evidence complete; final screenshots and video capture pending |
 
 ## Official source snapshot
 
-Checked on July 23, 2026:
+Checked on July 28, 2026:
 
-- https://cockroachlabs.devpost.com/
-- https://cockroachlabs.devpost.com/rules
+- https://cockroachdb-ai.devpost.com/
+- https://cockroachdb-ai.devpost.com/rules
+- https://cockroachdb-ai.devpost.com/resources
 - https://www.cockroachlabs.com/docs/stable/vector-indexes
 - https://www.cockroachlabs.com/docs/cockroachcloud/managed-mcp-server
 - https://www.cockroachlabs.com/pricing
