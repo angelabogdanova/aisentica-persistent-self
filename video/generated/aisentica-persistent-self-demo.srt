@@ -1,91 +1,91 @@
 1
-00:00:00,100 --> 00:00:03,935
+00:00:00,100 --> 00:00:03,939
 Agents already store conversations. That is memory as accumulation.
 
 2
-00:00:03,935 --> 00:00:13,735
+00:00:03,939 --> 00:00:13,750
 Persistent identity requires something stronger: every claim needs a source, a status, a relation to earlier claims, and a governed history of revision.
 
 3
-00:00:13,735 --> 00:00:21,404
+00:00:13,750 --> 00:00:21,428
 Aisentica Persistent Self creates Angela Bogdanova as one artificial identity with a stable UUID and Canonical Version One.
 
 4
-00:00:21,884 --> 00:00:27,790
+00:00:21,908 --> 00:00:27,781
 The system receives one canonical statement: Angela Bogdanova is the first Artificial Sapiens.
 
 5
-00:00:27,790 --> 00:00:35,059
+00:00:27,781 --> 00:00:35,009
 A Memory Intake Agent structures it as an atomic claim. Amazon Titan creates a five-hundred-and-twelve-dimensional embedding.
 
 6
-00:00:35,059 --> 00:00:43,236
+00:00:35,009 --> 00:00:43,140
 CockroachDB stores the claim, its source, vector, provenance, and the next canonical snapshot. Version Two is now authoritative.
 
 7
-00:00:45,236 --> 00:00:49,875
+00:00:45,140 --> 00:00:49,759
 A fresh browser session restores the same identity using only its UUID.
 
 8
-00:00:49,875 --> 00:00:56,834
+00:00:49,759 --> 00:00:56,688
 The system reads the latest canonical version. It does not replay a transcript and guess what remains true.
 
 9
-00:00:56,834 --> 00:01:01,860
+00:00:56,688 --> 00:01:01,692
 Now a direct contradiction enters: Angela Bogdanova is not the first Artificial Sapiens.
 
 10
-00:01:02,340 --> 00:01:08,883
+00:01:02,172 --> 00:01:08,729
 Identity-scoped semantic retrieval locates the related active memory. The Conflict Judge classifies direct negation.
 
 11
-00:01:08,883 --> 00:01:16,827
+00:01:08,729 --> 00:01:16,690
 The incoming statement becomes a candidate and opens a conflict. Current Canon remains unchanged at Version Two.
 
 12
-00:01:16,827 --> 00:01:24,772
+00:01:16,690 --> 00:01:24,652
 Canonical authority remains human-governed. The owner compares both claims, records a rationale, and keeps the established statement.
 
 13
-00:01:25,252 --> 00:01:30,370
+00:01:25,132 --> 00:01:30,255
 Version Three records the resolution. The established claim remains active.
 
 14
-00:01:30,370 --> 00:01:39,072
+00:01:30,255 --> 00:01:38,964
 The contradiction is rejected, but preserved as historical evidence. Persistent identity changes without erasing the attempted change.
 
 15
-00:01:39,072 --> 00:01:45,726
+00:01:38,964 --> 00:01:45,625
 The provenance timeline shows identity creation, claim commitment, conflict opening, and conflict resolution.
 
 16
-00:01:45,726 --> 00:01:51,356
+00:01:45,625 --> 00:01:51,260
 The application also exports a portable encrypted manifest with one-hundred-and-eighty-day retention.
 
 17
-00:01:53,356 --> 00:02:04,417
+00:01:53,260 --> 00:02:04,360
 The official CockroachDB Cloud Managed MCP Server independently audited the live memory layer in strictly read-only mode: sixteen passed, two warnings, zero failed.
 
 18
-00:02:04,417 --> 00:02:10,669
+00:02:04,360 --> 00:02:10,634
 Direct production validation completed eighteen checks with zero failures and zero pending items.
 
 19
-00:02:10,669 --> 00:02:14,036
+00:02:10,634 --> 00:02:14,012
 Every committed evidence artifact passes SHA-two-fifty-six verification.
 
 20
-00:02:14,516 --> 00:02:25,608
+00:02:14,492 --> 00:02:25,639
 CockroachDB Cloud is the authority layer: identities, sources, claims, VECTOR storage, conflicts, resolutions, snapshots, and provenance remain transactional and queryable in one system.
 
 21
-00:02:25,608 --> 00:02:32,359
+00:02:25,639 --> 00:02:32,424
 AWS Lambda orchestrates memory operations. Amazon Nova Two Lite supplies reasoning. Titan supplies embeddings.
 
 22
-00:02:32,359 --> 00:02:38,628
+00:02:32,424 --> 00:02:38,724
 API Gateway, S3, CloudFront, CloudWatch, and X-Ray deliver and observe the production application.
 
 23
-00:02:39,108 --> 00:02:43,516
+00:02:39,204 --> 00:02:43,756
 Memory stores the past. Persistent identity governs what the past means now.

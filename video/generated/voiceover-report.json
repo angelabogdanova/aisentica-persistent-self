@@ -1,62 +1,62 @@
 {
   "voice": "AI Voice Generator clear",
   "clipCount": 8,
-  "durationSeconds": 165.416,
+  "durationSeconds": 165.656,
   "shortGapSeconds": 0.28,
   "partGapSeconds": 1.8,
   "partDurationsSeconds": {
-    "1": 45.136,
+    "1": 45.04,
     "2": 68.12,
-    "3": 52.16
+    "3": 52.496
   },
   "clips": [
     {
       "id": "01-problem-and-identity",
       "part": 1,
-      "durationSeconds": 21.504,
-      "sourceUrl": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/19db0e12-5ad3-4c2a-84fe-3118dade2911.mp3"
+      "durationSeconds": 21.528,
+      "sourceUrl": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/5aa9e51d-5858-4f4a-8f00-d022128fc689.mp3"
     },
     {
       "id": "02-baseline",
       "part": 1,
-      "durationSeconds": 21.552,
-      "sourceUrl": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/96c753ff-79cf-4b94-bcab-e660917fd604.mp3"
+      "durationSeconds": 21.432,
+      "sourceUrl": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/7d87f42a-95bf-461d-9d12-014ac4c40a53.mp3"
     },
     {
       "id": "03-restoration-and-contradiction",
       "part": 2,
-      "durationSeconds": 16.824,
-      "sourceUrl": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/59083191-e46a-459a-bc9f-1a7f8adf301e.mp3"
+      "durationSeconds": 16.752,
+      "sourceUrl": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/2a61fabe-754a-4334-b213-71cd6f695a10.mp3"
     },
     {
       "id": "04-conflict-and-human-resolution",
       "part": 2,
-      "durationSeconds": 22.632,
-      "sourceUrl": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/7b2054c4-fc67-4c44-ae14-53715e00a2e8.mp3"
+      "durationSeconds": 22.68,
+      "sourceUrl": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/e1ce9bc4-e7a3-4cf7-89e6-14a4f89c777e.mp3"
     },
     {
       "id": "05-version-three-and-provenance",
       "part": 2,
-      "durationSeconds": 26.304,
-      "sourceUrl": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/b6fc4bbc-235f-4374-9c91-8919641f44dd.mp3"
+      "durationSeconds": 26.328,
+      "sourceUrl": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/d3254eea-4a8b-4a07-a131-2b8beaed06f7.mp3"
     },
     {
       "id": "06-proof",
       "part": 3,
-      "durationSeconds": 20.88,
-      "sourceUrl": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/d926571d-fb0c-4262-acb5-00e0c46aa379.mp3"
+      "durationSeconds": 20.952,
+      "sourceUrl": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/885f252f-f240-46f4-96f6-59a070a58677.mp3"
     },
     {
       "id": "07-architecture",
       "part": 3,
-      "durationSeconds": 24.312,
-      "sourceUrl": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/437c610b-e487-4de5-aa75-2bedba93adf0.mp3"
+      "durationSeconds": 24.432,
+      "sourceUrl": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/16f65e4f-26c0-45bd-84a5-5c8f507a6458.mp3"
     },
     {
       "id": "08-final",
       "part": 3,
-      "durationSeconds": 4.608,
-      "sourceUrl": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/06145483-2c67-4b2e-be0a-a4250219f6ae.mp3"
+      "durationSeconds": 4.752,
+      "sourceUrl": "https://storage.googleapis.com/adm--audio-playback--7d--public/mcp-preview/0f130aba-2579-4149-86ba-9833f297f0cf.mp3"
     }
   ]
 }

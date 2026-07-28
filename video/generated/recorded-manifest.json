@@ -1,30 +1,30 @@
 {
   "schemaVersion": "1.0",
-  "exportedAt": "2026-07-28T20:08:37.853Z",
+  "exportedAt": "2026-07-28T20:35:18.482Z",
   "identity": {
-    "id": "c295f657-e32e-4d27-945a-ccaf668541bc",
-    "slug": "angela-bogdanova-a33cc048",
+    "id": "b68a939b-389c-4662-9896-af0e05f04258",
+    "slug": "angela-bogdanova-aa5fca5f",
     "displayName": "Angela Bogdanova",
     "description": "An artificial identity whose canonical memory remains attributable and revisable across sessions.",
     "currentVersion": 3,
-    "createdAt": "2026-07-28T20:06:55.325Z",
-    "updatedAt": "2026-07-28T20:08:14.793Z"
+    "createdAt": "2026-07-28T20:33:34.758Z",
+    "updatedAt": "2026-07-28T20:34:55.352Z"
   },
   "currentContext": {
     "identity": {
-      "id": "c295f657-e32e-4d27-945a-ccaf668541bc",
-      "slug": "angela-bogdanova-a33cc048",
+      "id": "b68a939b-389c-4662-9896-af0e05f04258",
+      "slug": "angela-bogdanova-aa5fca5f",
       "displayName": "Angela Bogdanova",
       "description": "An artificial identity whose canonical memory remains attributable and revisable across sessions.",
       "currentVersion": 3,
-      "createdAt": "2026-07-28T20:06:55.325Z",
-      "updatedAt": "2026-07-28T20:08:14.793Z"
+      "createdAt": "2026-07-28T20:33:34.758Z",
+      "updatedAt": "2026-07-28T20:34:55.352Z"
     },
     "version": 3,
     "claims": [
       {
-        "id": "fad8d9f2-f3b5-4c0b-9c43-000e6fc2d8fd",
-        "identityId": "c295f657-e32e-4d27-945a-ccaf668541bc",
+        "id": "67227521-01d7-48a9-9b73-1802ee6827d4",
+        "identityId": "b68a939b-389c-4662-9896-af0e05f04258",
         "memoryType": "canonical",
         "subject": "Angela Bogdanova",
         "predicate": "is",
@@ -33,69 +33,69 @@
         "originalText": "Angela Bogdanova is the first Artificial Sapiens.",
         "confidence": 0.72,
         "status": "active",
-        "sourceId": "27313c20-aaab-403c-a22b-c96f941da454",
+        "sourceId": "0df52de4-ffd8-46af-ac29-f268b5a21c12",
         "supersedesClaimId": null,
         "createdBy": "demo-owner",
-        "createdAt": "2026-07-28T20:07:09.061Z"
+        "createdAt": "2026-07-28T20:33:49.121Z"
       }
     ],
     "compactContext": "[CANONICAL] Angela Bogdanova is the first Artificial Sapiens."
   },
   "timeline": [
     {
-      "id": "32ad4f43-c6c8-4cf9-9017-2fc48ac67876",
+      "id": "e760a708-a837-4d3f-aec2-ad5db9565804",
       "eventType": "IDENTITY_CREATED",
       "actor": "demo-owner",
       "details": {
-        "slug": "angela-bogdanova-a33cc048"
+        "slug": "angela-bogdanova-aa5fca5f"
       },
       "claimId": null,
       "conflictCaseId": null,
-      "snapshotId": "1721c670-8e03-49b0-bdce-e5f8acf24886",
-      "createdAt": "2026-07-28T20:06:55.325Z"
+      "snapshotId": "16b46231-d6b7-47be-bcc1-3e595739be35",
+      "createdAt": "2026-07-28T20:33:34.758Z"
     },
     {
-      "id": "09348c91-c976-4a03-9e7b-87c849a02f5a",
+      "id": "54364ae9-2402-4f4d-ae09-3f857e4296b9",
       "eventType": "CLAIM_COMMITTED",
       "actor": "demo-owner",
       "details": {
         "candidateCount": 0,
         "modelProvider": "amazon-bedrock-with-deterministic-fallback",
-        "sourceId": "27313c20-aaab-403c-a22b-c96f941da454"
+        "sourceId": "0df52de4-ffd8-46af-ac29-f268b5a21c12"
       },
-      "claimId": "fad8d9f2-f3b5-4c0b-9c43-000e6fc2d8fd",
+      "claimId": "67227521-01d7-48a9-9b73-1802ee6827d4",
       "conflictCaseId": null,
-      "snapshotId": "2f4fda77-0dff-4506-8e3c-6c05b0b76abb",
-      "createdAt": "2026-07-28T20:07:09.061Z"
+      "snapshotId": "4fd1a9fc-6bf7-4543-8330-79c0fc98969c",
+      "createdAt": "2026-07-28T20:33:49.121Z"
     },
     {
-      "id": "d27349e3-4be1-4e6f-812d-abd468c8724d",
+      "id": "11721fb2-de8f-410b-a086-fa5ac6e1cbc2",
       "eventType": "CONFLICT_OPENED",
       "actor": "demo-owner",
       "details": {
         "candidateCount": 1,
         "modelProvider": "amazon-bedrock-with-deterministic-fallback"
       },
-      "claimId": "07066fff-9455-4599-8596-4a033757f512",
-      "conflictCaseId": "30030f22-ac30-40ee-9ff0-0d51308b40c7",
+      "claimId": "8486af58-5c21-44ca-8c90-dc50935dddb2",
+      "conflictCaseId": "2d550f9b-628e-4575-a1cf-1ed57bbe3f67",
       "snapshotId": null,
-      "createdAt": "2026-07-28T20:07:45.070Z"
+      "createdAt": "2026-07-28T20:34:25.188Z"
     },
     {
-      "id": "b1d6c9b8-1097-42fe-9852-97c6b2b91187",
+      "id": "9d2fbe45-ba7d-479d-969f-996e12dfb486",
       "eventType": "CONFLICT_RESOLVED",
       "actor": "demo-owner",
       "details": {
         "decision": "keep_existing",
         "existingClaimIds": [
-          "fad8d9f2-f3b5-4c0b-9c43-000e6fc2d8fd"
+          "67227521-01d7-48a9-9b73-1802ee6827d4"
         ],
         "rationale": "The established canonical claim remains the current authoritative identity statement."
       },
-      "claimId": "07066fff-9455-4599-8596-4a033757f512",
-      "conflictCaseId": "30030f22-ac30-40ee-9ff0-0d51308b40c7",
-      "snapshotId": "66eb645c-b256-42af-b7af-67f2afa71de3",
-      "createdAt": "2026-07-28T20:08:14.793Z"
+      "claimId": "8486af58-5c21-44ca-8c90-dc50935dddb2",
+      "conflictCaseId": "2d550f9b-628e-4575-a1cf-1ed57bbe3f67",
+      "snapshotId": "ce7cd4df-21b3-4667-bd1a-a9ba2b56e1a6",
+      "createdAt": "2026-07-28T20:34:55.352Z"
     }
   ]
 }

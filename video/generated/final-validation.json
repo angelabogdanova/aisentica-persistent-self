@@ -1,5 +1,5 @@
 {
-  "durationSeconds": 165.433,
+  "durationSeconds": 165.667,
   "resolution": "1920x1080",
   "videoCodec": "h264",
   "audioCodec": "aac",
@@ -13,23 +13,23 @@
       "part": 1,
       "source": "01-intro-and-baseline.webm",
       "sourceStartSeconds": 0.0,
-      "sourceDurationSeconds": 47.32,
-      "targetDurationSeconds": 45.136,
-      "playbackFactor": 0.953846
+      "sourceDurationSeconds": 49.76,
+      "targetDurationSeconds": 45.04,
+      "playbackFactor": 0.905145
     },
     {
       "part": 2,
       "source": "02-restoration-conflict-resolution.webm",
       "sourceStartSeconds": 0.0,
-      "sourceDurationSeconds": 77.28,
+      "sourceDurationSeconds": 77.6,
       "targetDurationSeconds": 68.12,
-      "playbackFactor": 0.88147
+      "playbackFactor": 0.877835
     },
     {
       "part": 3,
       "source": "03-evidence-architecture-final.webm",
-      "sourceDurationSeconds": 39.88,
-      "targetDurationSeconds": 52.16,
+      "sourceDurationSeconds": 39.92,
+      "targetDurationSeconds": 52.496,
       "scenes": [
         {
           "scene": "proof",
@@ -37,8 +37,8 @@
           "source": "03-evidence-architecture-final.webm",
           "sourceStartSeconds": 0.0,
           "sourceDurationSeconds": 13.0,
-          "targetDurationSeconds": 21.16,
-          "playbackFactor": 1.627692
+          "targetDurationSeconds": 21.232,
+          "playbackFactor": 1.633231
         },
         {
           "scene": "architecture",
@@ -46,17 +46,17 @@
           "source": "03-evidence-architecture-final.webm",
           "sourceStartSeconds": 13.0,
           "sourceDurationSeconds": 18.0,
-          "targetDurationSeconds": 24.592,
-          "playbackFactor": 1.366222
+          "targetDurationSeconds": 24.712,
+          "playbackFactor": 1.372889
         },
         {
           "scene": "final",
           "voiceClip": "08-final",
           "source": "03-evidence-architecture-final.webm",
           "sourceStartSeconds": 31.0,
-          "sourceDurationSeconds": 8.88,
-          "targetDurationSeconds": 6.408,
-          "playbackFactor": 0.721622
+          "sourceDurationSeconds": 8.92,
+          "targetDurationSeconds": 6.552,
+          "playbackFactor": 0.734529
         }
       ]
     }
